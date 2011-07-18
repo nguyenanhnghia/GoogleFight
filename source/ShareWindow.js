@@ -26,7 +26,7 @@ enyo.kind({
 	],
 	dataShare:[
 		{label: "Share on Facebook",iconPath: "images/facebook-32.png"}, 
-		{label: "I Like",iconPath: "images/facebook-32.png"}, 
+		{label: "I Like You",iconPath: "images/facebook-32.png"}, 
 		{label: "Follow us on Twitter",iconPath: "images/twitter-32.png"}, 
 		{label: "Share with a friend ",iconPath: "images/mail-32.png"}, 
 		{label: "SMS to friend",iconPath: "images/messaging.png"} 
