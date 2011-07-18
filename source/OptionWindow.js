@@ -9,30 +9,26 @@ enyo.kind({
 		second: ""
 	},
 	components: [
-		{kind: enyo.HFlexBox, components:[
-			{flex:1},	
-			{kind: "VirtualList", onSetupRow: "setupRow", components: [
-			  {kind: "Item", tapHighlight: true, onclick:"showDialog", layoutKind: "HFlexLayout", components: [
-				{flex:1},
-				{name: "captionFight"},
-				{flex:1}
-			  ]}
-			]},
-			{flex:1}
-		]},
-		{kind: "ModalDialog", caption: "", layoutKind: "VFlexLayout", components: [
-			{kind: enyo.BasicScroller,components:[
-				{kind: "VirtualRepeater", name:"listCategory", onSetupRow:"setupRowModal", components: [
-					{kind: "Item",tapHighlight: true, onclick:"setSelectFight", className:"enyo-googlefight-option-item", layoutKind: "HFlexLayout", components: [
-						{name:"captionFItem1"},
-						{flex:1},
-						{content:"VS", style: "color: red"},
-						{flex:1},
-						{name:"captionFItem2"}
-					]}
-				]},	
-			]},
-			{kind: "Button", caption: "Close", onclick: "closeClick", className: "enyo-button-affirmative"}
+        {kind: "ModalDialog", caption: "", layoutKind: "VFlexLayout", components: [
+   			{kind: enyo.BasicScroller,components:[
+   				{kind: "VirtualRepeater", name:"listCategory", onSetupRow:"setupRowModal", components: [
+   					{kind: "Item",tapHighlight: true, onclick:"setSelectFight", className:"enyo-googlefight-option-item", layoutKind: "HFlexLayout", components: [
+   						{name:"captionFItem1"},
+   						{flex:1},
+   						{content:"VS", style: "color: red"},
+   						{flex:1},
+   						{name:"captionFItem2"}
+   					]}
+   				]},	
+   			]},
+   			{kind: "Button", caption: "Close", onclick: "closeClick", className: "enyo-button-affirmative"}
+   		]},
+		{kind: enyo.Scroller, flex: 1, components:[
+			{kind: enyo.HFlexBox, pack: "center", style: "padding-top: 20px; padding-bottom: 20px", components: [
+				{kind: enyo.VirtualRepeater, onSetupRow: "setupRow", components: [
+				  {kind: enyo.Button, name: "captionFight", width: "400px", onclick:"showDialog", caption: ""}
+				]}
+			]}
 		]}
 	],
 	data: [
@@ -80,11 +76,6 @@ enyo.kind({
 							{ first : "Futurama", second : "IT Crowd"},
 							{ first : "A-Team", second : "X-men"},
 							{ first : "Simpsons", second : "Family Guy"}
-					]
-			},{
-				categoryNameToDisplay: "User Fights",
-				category: [
-							{ first : "", second : ""}
 					]
 			}
 	],
