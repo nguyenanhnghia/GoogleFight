@@ -1,10 +1,35 @@
-.enyo-googlefight-header {
+.googlefight-header {
 	background-image: url('../images/bg_header.png'); 
 	font-size: 2em; 
 	text-align: center
 }
 
-.enyo-googlefight-option-item {
-	font-size: 13px; 
+.googlefight-body {
+	background-color: white
+}
+
+.rowgroup-text {
+	font-size: 1.1em;
+	color: yellow;
+}
+
+.option-item {
+	font-size: 15px; 
 	color: green
+}
+
+.failure-header {
+	font-size: 1.1em; 
+	text-align: center
+}
+
+.failure-text {
+	width: 320px;
+	font-size: 0.8em; 
+	text-align: justify
+}
+
+.fight-list {
+	padding-top: 20px; 
+	padding-bottom: 20px
 }
