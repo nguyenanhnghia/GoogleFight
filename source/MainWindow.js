@@ -2,7 +2,7 @@ enyo.kind({
 	name: "GoogleFight.MainWindow",
 	kind: enyo.VFlexBox,
 	components: [
-		{kind: enyo.HFlexBox, style: "background-image: url('images/bg_header.png'); font-size: 2em; text-align: center", components: [
+		{kind: enyo.HFlexBox, className: "enyo-googlefight-header", components: [
 			{flex: 1},
 			{content: "GOOGLE ", align: "center", style: "color: white;"},
 			{content: "FIGHT", align: "center", style: "color: black;"},

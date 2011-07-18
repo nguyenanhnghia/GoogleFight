@@ -11,7 +11,7 @@ enyo.kind({
 	components: [
 		{kind: enyo.HFlexBox, components:[
 			{flex:1},	
-			{kind: "VirtualList", style: "width: 500px; height: 300px;", onSetupRow: "setupRow", components: [
+			{kind: "VirtualList", onSetupRow: "setupRow", components: [
 			  {kind: "Item", tapHighlight: true, onclick:"showDialog", layoutKind: "HFlexLayout", components: [
 				{flex:1},
 				{name: "captionFight"},
@@ -20,11 +20,10 @@ enyo.kind({
 			]},
 			{flex:1}
 		]},
-		{kind: enyo.Animator, onBegin: "setPosition", onAnimate: "animate", components: [
-			{kind: "ModalDialog", caption: "", layoutKind: "VFlexLayout", components: [
+		{kind: "ModalDialog", caption: "", layoutKind: "VFlexLayout", components: [
 			{kind: enyo.BasicScroller,components:[
 				{kind: "VirtualRepeater", name:"listCategory", onSetupRow:"setupRowModal", components: [
-					{kind: "Item",tapHighlight: true, onclick:"setSelectFight", style: "font-size: 13px; color: green", layoutKind: "HFlexLayout", components: [
+					{kind: "Item",tapHighlight: true, onclick:"setSelectFight", className:"enyo-googlefight-option-item", layoutKind: "HFlexLayout", components: [
 						{name:"captionFItem1"},
 						{flex:1},
 						{content:"VS", style: "color: red"},
@@ -33,10 +32,7 @@ enyo.kind({
 					]}
 				]},	
 			]},
-			{layoutKind: "HFlexLayout", pack: "center", components: [
-				{kind: "Button", caption: "Close", onclick: "closeClick"}
-			]}
-		]}
+			{kind: "Button", caption: "Close", onclick: "closeClick", className: "enyo-button-affirmative"}
 		]}
 	],
 	data: [
@@ -120,13 +116,6 @@ enyo.kind({
 		this.second = r.second;
 		this.$.modalDialog.close();
 		this.doSelectFight();
-	},
-	setPosition: function() {
-		this.$.modalDialog.openAt(512, 768);
-	},
-	animate: function() {
-		for(var i = 0; i < 400; i++)
-			this.$.modalDialog.openAt(512, 768 - i);
 	},
 	closeClick: function(){
 		this.$.modalDialog.close();
