@@ -2,7 +2,6 @@ enyo.kind({
 	name: "GoogleFight.ShareWindow",
 	kind: enyo.VFlexBox,
 	components: [
-		{name: "listAccounts",kind: "PalmService",service: "palm://com.palm.service.accounts/",method: "launch"},
 		{
 			name: "openEmailCall",
 			kind: "PalmService",
@@ -13,9 +12,24 @@ enyo.kind({
 			onResponse: "gotResponse",
 			subscribe: true
 		},
-		{name: "AppManService", kind: "PalmService", service: "palm://com.palm.applicationManager/", method: "open"}, 
-		{kind: enyo.Sroller, components: [
-			{kind: "VirtualList", onSetupRow: "setupRow", components: [
+		{
+		    name: "launchBrowserCall",
+		    kind: "PalmService",
+		    service: "palm://com.palm.applicationManager/",
+		    method: "launch",
+		    onSuccess: "launchFinished",
+		    onFailure: "launchFail",
+		    onResponse: "gotResponse",
+		    subscribe: true
+		},
+		{
+			name: "smsService", 
+			kind: "PalmService", 
+			service: "palm://com.palm.applicationManager/", 
+			method: "open"
+		},
+		{kind: enyo.HFlexBox, pack:"center", components: [
+			{kind: "VirtualList", style: "width: 500px; height: 350px;", onSetupRow: "setupRow", components: [
 			  {kind: "Item", tapHighlight: true, layoutKind: "HFlexLayout", onclick:"getService", components: [
 				{kind: "ToolButton", name: "shareIcon"},
 				{name: "shareTitle", style: "padding-top: 15px"}
@@ -36,20 +50,31 @@ enyo.kind({
 	getService: function(inEvent,inIndex){
 		var r = inIndex.rowIndex;
 		switch (r) {
-			case 0: 	//var myString = "This is a string\nWith an email address: myemail@email.com\nAnd a phone number: 555-124-4567\nAnd a URL: http:/\/\webos101.com";
-							//var myString =	"555-124-4567";
-									//"tel: 555-124-4567";
-									//"url: http://www.facebook.com/#!/pages/ITS-On-Mobile/138832106129186?ref=search";
-									//"mailto: myemail@email.com";
-									//"And a phone number: 555-124-4567\nAnd a URL: http:/webos101.com";
-									console.log(this.$.shareTitle.getValue());
-					this.$.AppManService.call({target: this.$.shareTitle.getValue()});	
+			case 0: var myString =	"http:/\/\www.facebook.com/\#!/\pages/\ITS-On-Mobile/\138832106129186?ref=search";													
+					this.$.launchBrowserCall.call({"id": "com.palm.app.browser", "params":{"target": myString}});	
 				break;
-			case 1: this.log("this test");
+			case 1: var myString = "http:/\/\www.facebook.com/\#!/\pages/\ITS-On-Mobile/\138832106129186?ref=search";
+					this.$.launchBrowserCall.call({"id": "com.palm.app.browser", "params":{"target": myString}});
 				break;
-			case 2: enyo.log("enyo test");
+			case 2: var myString = "http:/\/\www.twitter.com/\itsonmobile";
+					this.$.launchBrowserCall.call({"id": "com.palm.app.browser", "params":{"target": myString}});
 				break;
-			case 3: this.$.openEmailCall.call({"target": "mailto: holeeSmokes@batman.com"});
+			case 3: //this.$.openEmailCall.call({"target": "mailto: holeeSmokes@batman.com"});
+				this.$.openEmailCall.call({
+					"id":"com.palm.app.email", 
+					"params":{
+	                   "summary":"Invitation on Google Fight",
+	                   "text":"<a href ='http://www.google.com/search?q=google+fight'>Google Fight</a>",
+	                   "recipients":[
+	                    {
+	                        "type":"email",
+	                        "contactDisplay":"Mr Nicolas",
+	                        "role":1,
+	                        "value":"tli_test_palm@rocketmail.com"
+	                     }]
+							} });
+				break;
+			case 4: this.$.smsService.call({"target":"sms:tli_test_palm@rocketmail.com"});
 				break;
 		}
 	},
@@ -61,9 +86,5 @@ enyo.kind({
 		  this.$.shareTitle.setContent(row.label);
 		  return true;
 	  }
-	},
-	linkClicked: function (inSender, inEvent) {
-		this.log(inSender, inEvent);
-		this.$.AppManService.call({target: inEvent});		
 	}
 });
