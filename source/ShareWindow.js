@@ -74,7 +74,12 @@ enyo.kind({
 	                     }]
 							} });
 				break;
-			case 4: this.$.smsService.call({"target":"sms:tli_test_palm@rocketmail.com"});
+			case 4: var msgTextContent = "I want to play Google Fight with you : http://bit.ly/GooglefightwebOS";
+					var paramsContent = {messageText : msgTextContent};
+					var parametersContent = {id :'com.palm.app.messaging', params : paramsContent};
+					enyo.log(parametersContent);
+					this.$.smsService.call({"id": "com.palm.app.messaging", "params":{"target": paramsContent}});
+					//$.smsService.call({"target":"sms:tli_test_palm@rocketmail.com"});
 				break;
 		}
 	},
