@@ -1,0 +1,10 @@
+{
+	"id": "com.tli.googlefight",
+	"version": "1.0.0",
+	"vendor": "TLi",
+	"type": "web",
+	"main": "index.html",
+	"title": "Google Fight",
+	"icon": "icon.png",
+	"uiRevision": 2
+}
