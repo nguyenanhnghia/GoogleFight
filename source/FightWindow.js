@@ -92,10 +92,10 @@ enyo.kind({
 		
 		this.$.drawingCanvas.setMaxHeight1(max1);
 		this.$.drawingCanvas.setMaxHeight2(max2);
-		this.$.drawingCanvas.setFirstPercent(per1 + "%");
-		this.$.drawingCanvas.setSecondPercent(per2 + "%");
-		
-		this.$.drawingCanvas.startAnimation();
+		this.$.drawingCanvas.setFirstPercent(per1);
+		this.$.drawingCanvas.setSecondPercent(per2);
+
+		this.$.drawingCanvas.startPieChartAnimation();
     },
     finishDrawing: function() {
     	this.$.fightButton.setActive(false);
