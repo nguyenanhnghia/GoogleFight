@@ -78,7 +78,8 @@ enyo.kind({
 					var paramsContent = {messageText : msgTextContent};
 					var parametersContent = {id :'com.palm.app.messaging', params : paramsContent};
 					enyo.log(parametersContent);
-					this.$.smsService.call({"target":"sms:tli_test_palm@rocketmail.com"});
+					this.$.smsService.call({"id": "com.palm.app.messaging", "params":{"target": paramsContent}});
+					//$.smsService.call({"target":"sms:tli_test_palm@rocketmail.com"});
 				break;
 		}
 	},
