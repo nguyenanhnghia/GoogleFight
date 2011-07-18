@@ -4,14 +4,21 @@ enyo.kind({
 	components: [
 	    {kind: "WebService", name: "getFirstResult", onSuccess: "getFirstResultSuccess", onFailure: "getFirstResultFailed"},
 	    {kind: "WebService", name: "getSecondResult", onSuccess: "getSecondResultSuccess", onFailure: "getSecondResultFailed"},
+	    {kind: "Popup", name: "failurePopup", components: [
+  	        {className: "failure-header", content: "Trouble Getting Result"},
+  	        {className: "failure-text", components: [
+  	            {name: "failureText"}
+  	        ]},
+  	        {kind: enyo.Button, caption: "OK", onclick: "closeFailurePopup", className: "enyo-button-affirmative"}
+  	    ]},
 	    {kind: enyo.HFlexBox, components: [
 	        {flex: 1},
-	        {kind: enyo.RowGroup, caption: "First Fighter", layoutKind: enyo.HFlexLayout, components: [
-	            {kind: enyo.Input, name: "firstFighter", width: "400px", autoCapitalize: "lowercase"}
+	        {kind: enyo.RowGroup, caption: "First Fighter", className: "rowgroup-text", layoutKind: enyo.HFlexLayout, components: [
+	            {kind: enyo.RoundedInput, name: "firstFighter", width: "400px", autoCapitalize: "lowercase"}
 	        ]},
 	        {flex: 1},
 	        {kind: enyo.RowGroup, caption: "Second Fighter", layoutKind: enyo.HFlexLayout, components: [
-   	            {kind: enyo.Input, name: "secondFighter", width: "400px", autoCapitalize: "lowercase"}
+   	            {kind: enyo.RoundedInput, name: "secondFighter", width: "400px", autoCapitalize: "lowercase"}
    	        ]},
 	        {flex: 1}
         ]},
@@ -29,10 +36,11 @@ enyo.kind({
  	   
  	   	if(firstFighterName == undefined || firstFighterName == ""
  	   		|| secondFighterName == undefined || secondFighterName == "") {
- 	   		this.$.fightButton.setActive(false);
+ 	   		this.showPopupWithContent("Unable to setup fighting. Please enter your fighters.")
  	   	} else {
  	   		this.$.fightButton.setActive(true);
- 	   		this.$.fightButton.disabled = true;
+ 	   		this.$.fightButton.setDisabled(true);
+ 	   		this.$.fightButton.setCaption("Fighting...");
  	   		
  	   		this.$.drawingCanvas.setFirstFighterName(firstFighterName);
  	   		this.$.drawingCanvas.setSecondFighterName(secondFighterName);
@@ -48,47 +56,59 @@ enyo.kind({
     getFirstResultSuccess: function(inSender, inResponse, inRequest) {
     	if(inResponse != null) {
     		var tempString1 = inResponse.substring(inResponse.indexOf("resultStats>") + 18, inResponse.indexOf("<nobr>"));
-    		this.firstFighterResult = tempString1.substring(0, tempString1.indexOf(" ")).replace(/^\s*/, "").replace(/\s*$/, "");
-    		this.$.drawingCanvas.setFirstFighterResultString(this.firstFighterResult);
-    		
-    		for(var i = 0; i < this.firstFighterResult.length; i++)
-    			this.firstFighterResult = this.firstFighterResult.replace(",", "");
-    		
-    		this.firstFighterResult = parseInt(this.firstFighterResult);
-    		
+    		if(tempString1.indexOf("results") == -1) {
+	    		this.firstFighterResult = 0;
+	    		this.$.drawingCanvas.setFirstFighterResultString("0");
+    		} else {
+    			this.firstFighterResult = tempString1.substring(0, tempString1.indexOf(" ")).replace(/^\s*/, "").replace(/\s*$/, "");
+	    		
+	    		for(var i = 0; i < this.firstFighterResult.length; i++)
+	    			this.firstFighterResult = this.firstFighterResult.replace(",", "");
+	    		
+	    		this.firstFighterResult = parseInt(this.firstFighterResult);
+    		}
     		// Call second Ajax
     		this.$.getSecondResult.setUrl(this.secondUrl);
  	   		this.$.getSecondResult.call();
-    	} else {
+    	} else
     		this.getFirstResultFailed();
-    	}
     },
     getFirstResultFailed: function() {
+    	this.showPopupWithContent("Unable to get results. Please check your internet connection or try again!")
     },
     getSecondResultSuccess: function(inSender, inResponse, inRequest) {
     	if(inResponse != null) {
     		var tempString2 = inResponse.substring(inResponse.indexOf("resultStats>") + 18, inResponse.indexOf("<nobr>"));
-    		this.secondFighterResult = tempString2.substring(0, tempString2.indexOf(" ")).replace(/^\s*/, "").replace(/\s*$/, "");
-    		this.$.drawingCanvas.setSecondFighterResultString(this.secondFighterResult);
-    		
-    		for(var i = 0; i < this.secondFighterResult.length; i++)
-    			this.secondFighterResult = this.secondFighterResult.replace(",", "");
-    		
+    		if(tempString2.indexOf("results") == -1) {
+    			this.secondFighterResult = 0;
+    			this.$.drawingCanvas.setSecondFighterResultString("0");
+    		}
+    		else {
+    			this.secondFighterResult = tempString2.substring(0, tempString2.indexOf(" ")).replace(/^\s*/, "").replace(/\s*$/, "");
+	    		for(var i = 0; i < this.secondFighterResult.length; i++)
+	    			this.secondFighterResult = this.secondFighterResult.replace(",", "");
+    		}
     		this.secondFighterResult = parseInt(this.secondFighterResult);
-    		
-    		this.calculateWidth();
+    		this.calculate();
     	} else {
     		this.getSecondResultFailed();
     	}
     },
     getSecondResultFailed: function() {
+    	this.showPopupWithContent("Unable to get results. Please check your internet connection or try again!")
     },
-    calculateWidth: function() {
-		var total = this.firstFighterResult + this.secondFighterResult;
-		var max1 = Math.floor((this.firstFighterResult / total) * 350);
-		var max2 = Math.floor((this.secondFighterResult / total) * 350);
-		var per1 = Math.floor((this.firstFighterResult / total) * 100);
-		var per2 = 100 - per1;
+    calculate: function() {
+    	var max1, max2, per1, per2;
+    	if(this.firstFighterResult == 0 && this.secondFighterResult == 0) {
+    		max1 = max2 = 200;
+    		per1 = per2 = 50;
+    	} else {
+			total = this.firstFighterResult + this.secondFighterResult;
+			max1 = Math.floor((this.firstFighterResult / total) * 350);
+			max2 = Math.floor((this.secondFighterResult / total) * 350);
+			per1 = Math.floor((this.firstFighterResult / total) * 100);
+			per2 = 100 - per1;
+    	}
 		
 		this.$.drawingCanvas.setMaxHeight1(max1);
 		this.$.drawingCanvas.setMaxHeight2(max2);
@@ -98,8 +118,20 @@ enyo.kind({
 		this.$.drawingCanvas.startPieChartAnimation();
     },
     finishDrawing: function() {
+    	this.refreshFightButton();
+    },
+    showPopupWithContent: function(content) {
+    	this.$.failurePopup.openAtCenter();
+    	this.$.failureText.setContent(content);
+    },
+    closeFailurePopup: function() {
+    	this.$.failurePopup.close();
+    	this.refreshFightButton();
+    },
+    refreshFightButton: function() {
     	this.$.fightButton.setActive(false);
-		this.$.fightButton.disabled = false;
+		this.$.fightButton.setDisabled(false);
+		this.$.fightButton.setCaption("Fight");
     },
     trimString: function(stringToTrim) {
     	return stringToTrim.replace(/^\s*/, "").replace(/\s*$/, "");

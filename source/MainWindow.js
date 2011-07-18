@@ -2,16 +2,16 @@ enyo.kind({
 	name: "GoogleFight.MainWindow",
 	kind: enyo.VFlexBox,
 	components: [
-		{kind: enyo.HFlexBox, className: "enyo-googlefight-header", components: [
+		{kind: enyo.HFlexBox, className: "googlefight-header", components: [
 			{flex: 1},
 			{content: "GOOGLE ", align: "center", style: "color: white;"},
 			{content: "FIGHT", align: "center", style: "color: black;"},
 			{flex: 1}
 		]},
-        {name: "mainWindow", kind: "Pane",  transitionKind: "enyo.transitions.LeftRightFlyin", flex: 1, components: [
-            {kind: "GoogleFight.FightWindow", name: "fightWindow", className: "enyo-bg"},
-	        {kind: "GoogleFight.OptionWindow", name: "optionWindow", onSelectFight: "makeFight", className: "enyo-bg"},
-			{kind: "GoogleFight.ShareWindow", name: "shareWindow", className: "enyo-bg"}
+        {name: "mainWindow", kind: "Pane", flex: 1, components: [
+            {kind: "GoogleFight.FightWindow", name: "fightWindow", className: "googlefight-body"},
+	        {kind: "GoogleFight.OptionWindow", name: "optionWindow", onSelectFight: "makeFight", className: "googlefight-body"},
+			{kind: "GoogleFight.ShareWindow", name: "shareWindow", className: "googlefight-body"}
         ]},
         {kind: enyo.Toolbar, pack: "justify", components: [
 	        {flex: 1},
