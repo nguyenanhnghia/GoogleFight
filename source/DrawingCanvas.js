@@ -37,7 +37,7 @@ enyo.kind({
 		
 		// Params for drawing pie chart
 		this.centerX = this.can.width / 2;
-		this.centerY = this.can.height / 2 + 20;
+		this.centerY = this.can.height / 2 + 10;
 		this.startAngle = - Math.PI / 2;
 		this.radius = 10;
 		this.radiusInterval = 5;
