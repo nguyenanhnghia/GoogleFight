@@ -14,11 +14,11 @@ enyo.kind({
 			subscribe: true
 		},
 		{name: "AppManService", kind: "PalmService", service: "palm://com.palm.applicationManager/", method: "open"}, 
-		{kind: enyo.HFlexBox, pack:"center",components:[	
-			{kind: "VirtualList",style: "width: 500px; height: 300px;", onSetupRow: "setupRow", components: [
+		{kind: enyo.Sroller, components: [
+			{kind: "VirtualList", onSetupRow: "setupRow", components: [
 			  {kind: "Item", tapHighlight: true, layoutKind: "HFlexLayout", onclick:"getService", components: [
 				{kind: "ToolButton", name: "shareIcon"},
-				{name: "shareTitle",style: "padding-top: 15px"}
+				{name: "shareTitle", style: "padding-top: 15px"}
 				
 			  ]}
 			]},
@@ -36,13 +36,14 @@ enyo.kind({
 	getService: function(inEvent,inIndex){
 		var r = inIndex.rowIndex;
 		switch (r) {
-			case 0: 	var myString =	"tel: 555-124-4567";
+			case 0: 	//var myString = "This is a string\nWith an email address: myemail@email.com\nAnd a phone number: 555-124-4567\nAnd a URL: http:/\/\webos101.com";
+							//var myString =	"555-124-4567";
 									//"tel: 555-124-4567";
 									//"url: http://www.facebook.com/#!/pages/ITS-On-Mobile/138832106129186?ref=search";
 									//"mailto: myemail@email.com";
-									//"And a phone number: 555-124-4567\nAnd a URL: http:\\\\webos101.com";
-					this.$.AppManService.call({target: myString});	
-					console.log("console test");
+									//"And a phone number: 555-124-4567\nAnd a URL: http:/webos101.com";
+									console.log(this.$.shareTitle.getValue());
+					this.$.AppManService.call({target: this.$.shareTitle.getValue()});	
 				break;
 			case 1: this.log("this test");
 				break;
@@ -60,5 +61,9 @@ enyo.kind({
 		  this.$.shareTitle.setContent(row.label);
 		  return true;
 	  }
+	},
+	linkClicked: function (inSender, inEvent) {
+		this.log(inSender, inEvent);
+		this.$.AppManService.call({target: inEvent});		
 	}
 });
