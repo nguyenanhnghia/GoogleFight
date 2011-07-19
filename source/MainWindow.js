@@ -2,6 +2,19 @@ enyo.kind({
 	name: "GoogleFight.MainWindow",
 	kind: enyo.VFlexBox,
 	components: [
+        //{kind: enyo.Animator, onBegin: "beginAnimation", onAnimate: "stepAnimation", onEnd: "endAnimation"},
+        {kind: enyo.Menu, name: "optionMenu", showHideMode: "transition",
+        	openClassName: "scaleIn", className: "transitioner3", layoutKind: enyo.VFlexLayout, components: [
+			{content: "Drawing Options", className: "popup-header"},
+			{kind: enyo.HFlexBox, components: [
+			    {kind: enyo.CheckBox, name: "cbBarChart", checked: true},
+			    {content: "Bar chart"}
+			]},
+			{kind: enyo.HFlexBox, components: [
+			    {kind: enyo.CheckBox, name: "cbPieChart", checked: false},
+			    {content: "Pie chart"}
+			]}
+		]},
 		{kind: enyo.HFlexBox, className: "googlefight-header", components: [
 			{flex: 1},
 			{content: "GOOGLE ", align: "center", style: "color: white;"},
@@ -14,6 +27,7 @@ enyo.kind({
 			{kind: "GoogleFight.ShareWindow", name: "shareWindow", className: "googlefight-body"}
         ]},
         {kind: enyo.Toolbar, pack: "justify", components: [
+	        {kind: enyo.ToolButton, name: "optionButton", onclick: "openOption", caption: "Option"},
 	        {flex: 1},
             {kind: enyo.RadioToolButtonGroup, components: [
                 {label: "Home", name: "lbHome", icon: "images/home.png", onclick:"goHome"},
@@ -47,6 +61,9 @@ enyo.kind({
 	goShare: function(){
 		this.$.mainWindow.selectViewByName("shareWindow");
 		this.resetRadioButton( this.$.lbShare,this.$.lbHome, this.$.lbFights);
+	},
+	openOption: function(inSender, inEvent) {
+		this.$.optionMenu.openAtEvent(inEvent);
 	},
 	resetRadioButton: function(btn1, btn2, btn3) {
 		btn1.setDepressed(true);

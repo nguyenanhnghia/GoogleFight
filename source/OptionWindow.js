@@ -1,3 +1,22 @@
+easeOutBounce = function(inValue, inAnimation) {
+	var a = inAnimation;
+	return easeOutBounce.step(a.t1-a.t0, 0, 1, a.duration); 
+}
+
+// http://plugins.jquery.com/files/jquery.easing.1.2.js.txt
+// t: current time, b: beginning value, c: change in value, d: duration
+easeOutBounce.step = function (t, b, c, d) {
+	if ((t/=d) < (1/2.75)) {
+		return c*(7.5625*t*t) + b;
+	} else if (t < (2/2.75)) {
+		return c*(7.5625*(t-=(1.5/2.75))*t + .75) + b;
+	} else if (t < (2.5/2.75)) {
+		return c*(7.5625*(t-=(2.25/2.75))*t + .9375) + b;
+	} else {
+		return c*(7.5625*(t-=(2.625/2.75))*t + .984375) + b;
+	}
+}
+
 enyo.kind({
 	name: "GoogleFight.OptionWindow",
 	kind: enyo.VFlexBox,
@@ -9,8 +28,11 @@ enyo.kind({
 		second: ""
 	},
 	components: [
-        {kind: "ModalDialog", caption: "", layoutKind: "VFlexLayout", components: [
-   			{kind: enyo.BasicScroller,components:[
+	    {kind: "Animator", onBegin: "beginAnimation", onAnimate: "stepAnimation", onEnd: "endAnimation"},
+   		{name: "animatedPopup", kind: "Popup", showHideMode: "manual", onOpen: "animateOpen", onClose: "animateClose",
+			scrim: true, modal: true, dismissWithClick: false, width: "400px", components: [
+			{className: "popup-header", name: "title"},
+			{kind: enyo.BasicScroller,components:[
    				{kind: "VirtualRepeater", name:"listCategory", onSetupRow:"setupRowModal", components: [
    					{kind: "Item",tapHighlight: true, onclick:"setSelectFight", className:"option-item", layoutKind: "HFlexLayout", components: [
    						{name:"captionFItem1"},
@@ -22,11 +44,11 @@ enyo.kind({
    				]},	
    			]},
    			{kind: "Button", caption: "Close", onclick: "closeClick", className: "enyo-button-affirmative"}
-   		]},
+		]},
 		{kind: enyo.Scroller, flex: 1, components:[
 			{kind: enyo.HFlexBox, pack: "center", className: "fight-list", components: [
 				{kind: enyo.VirtualRepeater, onSetupRow: "setupRow", components: [
-				  {kind: enyo.Button, name: "captionFight", className: "enyo-button-dark", width: "400px", onclick:"showDialog", caption: ""}
+				  {kind: enyo.Button, name: "captionFight", onclick: "showDialog", popup: "animatedPopup", className: "enyo-button-dark", width: "400px"}
 				]}
 			]}
 		]}
@@ -79,6 +101,32 @@ enyo.kind({
 					]
 			}
 	],
+	animateOpen: function(inSender) {
+		if (inSender.hasNode()) {
+			this.$.animator.setDuration(750);
+			this.$.animator.style = inSender.node.style;
+			this.$.animator.popup = inSender;
+			this.$.animator.setEasingFunc(easeOutBounce);
+			this.$.animator.play();
+		}
+	},
+	animateClose: function(inSender) {
+		this.$.animator.setDuration(250);
+		this.$.animator.setEasingFunc(enyo.easing.easeOut);
+		this.$.animator.play();
+	},
+	beginAnimation: function(inSender) {
+		inSender.popup.setShowing(true);
+	},
+	stepAnimation: function(inSender, inValue, inPercent) {
+		var p = inSender.popup.isOpen ? inPercent : 1 - inPercent;
+		inSender.style.opacity = p;
+		inSender.style.webkitTransform = "scale(" + (2 - p) +")";
+	},
+	endAnimation: function(inSender) {
+		var popup = inSender.popup;
+		popup.setShowing(popup.isOpen);
+	},
 	setupRow: function(inSender, inIndex) {
 	  var row = this.data[inIndex];
 	  if (row) {
@@ -97,19 +145,22 @@ enyo.kind({
 	},
 	showDialog: function(inSender, inEvent) {
 		this.rowClickIndex = inEvent.rowIndex;
-		this.$.modalDialog.openAtCenter();
-		this.$.modalDialog.setCaption(this.data[this.rowClickIndex].categoryNameToDisplay);
-		this.$.listCategory.render();
+		var p = this.$[inSender.popup];
+		if (p) {
+			p.openAtCenter();
+			this.$.title.setContent(this.data[this.rowClickIndex].categoryNameToDisplay);
+			this.$.listCategory.render();
+		}
 	},
 	setSelectFight: function(inSender, inEvent) {
 		var r = this.data[this.rowClickIndex].category[inEvent.rowIndex];
 		this.first = r.first;
 		this.second = r.second;
-		this.$.modalDialog.close();
-		this.doSelectFight();
+		this.closeClick();
+		window.setTimeout(enyo.hitch(this, "doSelectFight"), 500);
 	},
 	closeClick: function(){
-		this.$.modalDialog.close();
+		this.$.animatedPopup.close();
 	}
 });
 
