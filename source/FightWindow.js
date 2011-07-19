@@ -5,7 +5,7 @@ enyo.kind({
 	    {kind: "WebService", name: "getFirstResult", onSuccess: "getFirstResultSuccess", onFailure: "getFirstResultFailed"},
 	    {kind: "WebService", name: "getSecondResult", onSuccess: "getSecondResultSuccess", onFailure: "getSecondResultFailed"},
 	    {kind: "Popup", name: "failurePopup", components: [
-  	        {className: "failure-header", content: "Trouble Getting Result"},
+  	        {className: "popup-header", content: "Trouble Getting Result"},
   	        {className: "failure-text", components: [
   	            {name: "failureText"}
   	        ]},
@@ -33,11 +33,7 @@ enyo.kind({
 	        {kind: enyo.HFlexBox, pack: "center", style: "padding-top: 50px; padding-bottom: 50px", components: [
 	            {kind: enyo.WebView, width: "800px", name: "showCharts"}
 	        ]}
-	    ]},
-	    {kind: enyo.HFlexBox, components: [
-			{kind: enyo.CheckBox, checked: true, vale},
-			{kind: enyo.CheckBox, checked: false, caption: "Pie chart"},
-        ]}
+	    ]}
 	],
     getFighting: function() {
     	this.firstFighterName = this.trimString(this.$.firstFighter.getValue());
