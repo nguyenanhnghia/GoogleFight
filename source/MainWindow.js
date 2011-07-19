@@ -42,7 +42,7 @@ enyo.kind({
 	goFight: function() {
 		this.$.mainWindow.selectViewByName("optionWindow");
 		this.resetRadioButton(this.$.lbFights, this.$.lbHome, this.$.lbShare);
-		this.$.fightWindow.$.drawingCanvas.clearCanvas();
+		//this.$.fightWindow.$.drawingCanvas.clearCanvas();
 	},
 	goShare: function(){
 		this.$.mainWindow.selectViewByName("shareWindow");

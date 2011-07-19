@@ -33,12 +33,15 @@ enyo.kind({
 	        {kind: enyo.HFlexBox, pack: "center", style: "padding-top: 50px; padding-bottom: 50px", components: [
 	            {kind: enyo.WebView, width: "800px", name: "showCharts"}
 	        ]}
-	    ]}
+	    ]},
+	    {kind: enyo.HFlexBox, components: [
+			{kind: enyo.CheckBox, checked: true, vale},
+			{kind: enyo.CheckBox, checked: false, caption: "Pie chart"},
+        ]}
 	],
     getFighting: function() {
     	this.firstFighterName = this.trimString(this.$.firstFighter.getValue());
     	this.secondFighterName = this.trimString(this.$.secondFighter.getValue());
-    	this.$.showCharts.activate();
  	   
  	   	if(this.firstFighterName == undefined || this.firstFighterName == ""
  	   		|| this.secondFighterName == undefined || this.secondFighterName == "") {
@@ -131,7 +134,6 @@ enyo.kind({
     		+ this.org1 + "(" + per1 + "%)|" + this.org2 + "(" + per2 + "%)";
     	this.$.showCharts.setUrl(pieChartUrl);
     	this.refreshFightButton();
-    	this.$.showCharts.deactivate();
 		
 		//this.$.drawingCanvas.setMaxHeight1(max1);
 		//this.$.drawingCanvas.setMaxHeight2(max2);
