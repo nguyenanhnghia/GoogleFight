@@ -3,8 +3,8 @@ enyo.kind({
 	kind: enyo.Control,
 	nodeTag: "canvas",
 	domAttributes: { 
-    	width:"1020px", 
-    	height:"480px"
+    	width: "1020px", 
+    	height: "480px"
 	},
 	published: {
 		maxHeight1: 0,
@@ -166,6 +166,9 @@ enyo.kind({
 		this.ctx.fillStyle = this.fillStyle2;
 		this.ctx.fill();
 		this.ctx.stroke();
+	},
+	drawPieChartStatistics: function() {
+		
 	},
 	startChartAnimation: function() {
 		this.job = window.setInterval(enyo.hitch(this, "chartAnimation"), this.timeInterval);
