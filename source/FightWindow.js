@@ -34,7 +34,7 @@ enyo.kind({
 	    //{kind: "GoogleFight.DrawingCanvas", name: "drawingCanvas", onFinish: "finishDrawing"}
 	    {kind: enyo.Scroller, flex: 1, components: [
 	        {kind: enyo.HFlexBox, pack: "center", style: "padding-top: 50px; padding-bottom: 50px", components: [
-				//get result image of Pie chart of Bar char from Google, and show it
+	            // Web view to show the chart
 	            {kind: enyo.WebView, width: "800px", name: "showCharts"}  
 	        ]}
 	    ]}
@@ -50,33 +50,35 @@ enyo.kind({
  	   		|| this.secondFighterName == undefined || this.secondFighterName == "") {
  	   		this.showPopupWithContent("Unable to setup fighting. Please enter your fighters.")
  	   	} else {
-				this.$.fightButton.setActive(true);
-				this.$.fightButton.setDisabled(true);
-				this.$.fightButton.setCaption("Fighting...");
-				
-				//this.$.drawingCanvas.setFirstFighterName(firstFighterName);
-				//this.$.drawingCanvas.setSecondFighterName(secondFighterName);
-				
-				this.firstUrl = "http://www.google.com/search?q=" + this.firstFighterName + "&nomo=1";
-				this.secondUrl = "http://www.google.com/search?q=" + this.secondFighterName + "&nomo=1";
-				
-				// Call first Ajax
-				this.$.getFirstResult.setUrl(this.firstUrl);
-				this.$.getFirstResult.call();
+ 	   		// Format the fight button to active
+			this.setFightActive();
+			
+			// Url for get calling Ajax
+			this.firstUrl = "http://www.google.com/search?q=" + this.firstFighterName + "&nomo=1";
+			this.secondUrl = "http://www.google.com/search?q=" + this.secondFighterName + "&nomo=1";
+			
+			// Call first Ajax
+			this.$.getFirstResult.setUrl(this.firstUrl);
+			this.$.getFirstResult.call();
  	   	}
     },
+    /* Function to get the result from first Ajax call
+     * If this call failed, then stop to show failure popup
+     */
     getFirstResultSuccess: function(inSender, inResponse, inRequest) {
     	if(inResponse != null) {
     		var tempString1 = inResponse.substring(inResponse.indexOf("resultStats>") + 18, inResponse.indexOf("<nobr>"));
+    		// Check if there is a result
     		if(tempString1.indexOf("results") == -1) {
 	    		this.firstFighterResult = 0;
-	    		//this.$.drawingCanvas.setFirstFighterResultString("0");
     		} else {
+    			// Remove 'results' string and comma
     			this.firstFighterResult = tempString1.substring(0, tempString1.indexOf(" ")).replace(/^\s*/, "").replace(/\s*$/, "");
     			this.org1 = this.firstFighterResult;
 	    		for(var i = 0; i < this.firstFighterResult.length; i++)
 	    			this.firstFighterResult = this.firstFighterResult.replace(",", "");
 	    		
+	    		// Convert the first result to integer
 	    		this.firstFighterResult = parseInt(this.firstFighterResult);
     		}
     		// Call second Ajax
@@ -93,15 +95,17 @@ enyo.kind({
     		var tempString2 = inResponse.substring(inResponse.indexOf("resultStats>") + 18, inResponse.indexOf("<nobr>"));
     		if(tempString2.indexOf("results") == -1) {
     			this.secondFighterResult = 0;
-    			//this.$.drawingCanvas.setSecondFighterResultString("0");
     		}
     		else {
     			this.secondFighterResult = tempString2.substring(0, tempString2.indexOf(" ")).replace(/^\s*/, "").replace(/\s*$/, "");
     			this.org2 = this.secondFighterResult;
 	    		for(var i = 0; i < this.secondFighterResult.length; i++)
 	    			this.secondFighterResult = this.secondFighterResult.replace(",", "");
+	    		
+	    		this.secondFighterResult = parseInt(this.secondFighterResult);
     		}
-    		this.secondFighterResult = parseInt(this.secondFighterResult);
+    		
+    		// 
     		this.calculate();
     	} else {
     		this.getSecondResultFailed();
@@ -111,50 +115,38 @@ enyo.kind({
     	this.showPopupWithContent("Unable to get results. Please check your internet connection or try again!")
     },
     calculate: function() {
-    	var max1, max2, per1, per2; // save value after calculate percent, in order to draw chart
+    	var per1, per2; // properties for obtaining percentage
     	if(this.firstFighterResult == 0 && this.secondFighterResult == 0) {
-    		max1 = max2 = 200;
     		per1 = per2 = 50;
     	} else {
+    		// Calculate percentage of 2 fighters
 			total = this.firstFighterResult + this.secondFighterResult;
-			max1 = Math.floor((this.firstFighterResult / total) * 350);
-			max2 = Math.floor((this.secondFighterResult / total) * 350);
 			per1 = Math.floor((this.firstFighterResult / total) * 100);
 			per2 = 100 - per1;
     	}
     	
+    	// Format the name of 2 fighters if they are longer than 20 characters
     	if(this.firstFighterName.length > 20)
 			this.firstFighterName = this.firstFighterName.substring(0, 20) + "...";
-		
 		if(this.secondFighterName.length > 20)
 			this.secondFighterName = this.secondFighterName.substring(0, 20) + "...";
 		
-		
+		// Setup bar chart url for google chart
 		var barChartUrl = "http://chart.apis.google.com/chart?chxt=y&chbh=a,200&chs=800x300&cht=bvg&chco=FF0000,76A4FB&chd=t:" 
 			+ per1 + "|" + per2 + "&chdl=" + this.firstFighterName + " (" + this.org1 + ")|" 
 			+ this.secondFighterName + " (" + this.org2 + ")" + "&chdlp=t&chma=|15";
-    	
+    	// Setup pie chart url for google chart
     	var pieChartUrl = "http://chart.apis.google.com/chart?chxs=0,000000,25&chs=800x300&cht=p3&chco=FF0000,76A4FB&chd=t:" 
     		+ per1 + "," + per2 + "&chdl=" + this.firstFighterName + "|" + this.secondFighterName + "&chdlp=t&chl=" 
     		+ this.org1 + " (" + per1 + "%)|" + this.org2 + " (" + per2 + "%)";
     	
+    	// Drawing following user's drawing option
     	if(this.drawingOption)
     		this.$.showCharts.setUrl(barChartUrl);
     	else
     		this.$.showCharts.setUrl(pieChartUrl);
-    	this.refreshFightButton();
-		
-		//this.$.drawingCanvas.setMaxHeight1(max1);
-		//this.$.drawingCanvas.setMaxHeight2(max2);
-		//this.$.drawingCanvas.setFirstPercent(per1);
-		//this.$.drawingCanvas.setSecondPercent(per2);
-
-		//this.$.drawingCanvas.startPieChartAnimation();
+    	this.setFightDeactive();
     },
-    // finishDrawing: function() {
-    	// this.refreshFightButton();
-    // },
-	
 	//alarm when Google Fight don't search any results
     showPopupWithContent: function(content) {
     	this.$.failurePopup.openAtCenter();
@@ -162,9 +154,14 @@ enyo.kind({
     },
     closeFailurePopup: function() {
     	this.$.failurePopup.close();
-    	this.refreshFightButton();
+    	this.setFightDeactive();
     },
-    refreshFightButton: function() {
+    setFightActive: function() {
+    	this.$.fightButton.setActive(true);
+		this.$.fightButton.setDisabled(true);
+		this.$.fightButton.setCaption("Fighting...");
+    },
+    setFightDeactive: function() {
     	this.$.fightButton.setActive(false);
 		this.$.fightButton.setDisabled(false);
 		this.$.fightButton.setCaption("Fight");
