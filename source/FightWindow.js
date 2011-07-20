@@ -1,6 +1,9 @@
 enyo.kind({
 	name: "GoogleFight.FightWindow",
 	kind: enyo.VFlexBox,
+	published: {
+		drawingOption: true // property to get the drawing option from user
+	},
 	components: [
 	    {kind: "WebService", name: "getFirstResult", onSuccess: "getFirstResultSuccess", onFailure: "getFirstResultFailed"},
 	    {kind: "WebService", name: "getSecondResult", onSuccess: "getSecondResultSuccess", onFailure: "getSecondResultFailed"},
@@ -35,10 +38,13 @@ enyo.kind({
 	        ]}
 	    ]}
 	],
+	// Begin of clicking fight button
     getFighting: function() {
+    	// Get the input values from user
     	this.firstFighterName = this.trimString(this.$.firstFighter.getValue());
     	this.secondFighterName = this.trimString(this.$.secondFighter.getValue());
  	   
+    	// Check the inputs
  	   	if(this.firstFighterName == undefined || this.firstFighterName == ""
  	   		|| this.secondFighterName == undefined || this.secondFighterName == "") {
  	   		this.showPopupWithContent("Unable to setup fighting. Please enter your fighters.")
@@ -123,12 +129,17 @@ enyo.kind({
 			this.secondFighterName = this.secondFighterName.substring(0, 20) + "...";
 		
 		var barChartUrl = "http://chart.apis.google.com/chart?chxt=y&chbh=a,200&chs=800x300&cht=bvg&chco=FF0000,76A4FB&chd=t:" 
-			+ per1 + "|" + per2 + "&chdl=" + per1 + "%|" + per2 + "%&chdlp=t";
+			+ per1 + "|" + per2 + "&chdl=" + this.firstFighterName + " (" + this.org1 + ")|" 
+			+ this.secondFighterName + " (" + this.org2 + ")" + "&chdlp=t&chma=|15";
     	
     	var pieChartUrl = "http://chart.apis.google.com/chart?chxs=0,000000,25&chs=800x300&cht=p3&chco=FF0000,76A4FB&chd=t:" 
     		+ per1 + "," + per2 + "&chdl=" + this.firstFighterName + "|" + this.secondFighterName + "&chdlp=t&chl=" 
-    		+ this.org1 + "(" + per1 + "%)|" + this.org2 + "(" + per2 + "%)";
-    	this.$.showCharts.setUrl(pieChartUrl);
+    		+ this.org1 + " (" + per1 + "%)|" + this.org2 + " (" + per2 + "%)";
+    	
+    	if(this.drawingOption)
+    		this.$.showCharts.setUrl(barChartUrl);
+    	else
+    		this.$.showCharts.setUrl(pieChartUrl);
     	this.refreshFightButton();
 		
 		//this.$.drawingCanvas.setMaxHeight1(max1);
