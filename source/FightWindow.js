@@ -5,6 +5,7 @@ enyo.kind({
 		drawingOption: true // property to get the drawing option from user
 	},
 	components: [
+	    {kind: "ApplicationEvents", onWindowRotated: "resizeComponents"},
 	    {kind: "WebService", name: "getFirstResult", onSuccess: "getFirstResultSuccess", onFailure: "getFirstResultFailed"},
 	    {kind: "WebService", name: "getSecondResult", onSuccess: "getSecondResultSuccess", onFailure: "getSecondResultFailed"},
 	    {kind: "Popup", name: "failurePopup", components: [
@@ -17,11 +18,11 @@ enyo.kind({
 	    {kind: enyo.HFlexBox, components: [
 	        {flex: 1},
 	        {kind: enyo.RowGroup, caption: "First Fighter", className: "rowgroup-text", layoutKind: enyo.HFlexLayout, components: [
-	            {kind: enyo.RoundedInput, name: "firstFighter", width: "400px", autoCapitalize: "lowercase"}
+	            {kind: enyo.RoundedInput, name: "firstFighter", autoCapitalize: "lowercase"}
 	        ]},
 	        {flex: 1},
 	        {kind: enyo.RowGroup, caption: "Second Fighter", layoutKind: enyo.HFlexLayout, components: [
-   	            {kind: enyo.RoundedInput, name: "secondFighter", width: "400px", autoCapitalize: "lowercase"}
+   	            {kind: enyo.RoundedInput, name: "secondFighter", autoCapitalize: "lowercase"}
    	        ]},
 	        {flex: 1}
         ]},
@@ -33,9 +34,9 @@ enyo.kind({
 	    ]},
 	    //{kind: "GoogleFight.DrawingCanvas", name: "drawingCanvas", onFinish: "finishDrawing"}
 	    {kind: enyo.Scroller, flex: 1, components: [
-	        {kind: enyo.HFlexBox, pack: "center", style: "padding-top: 50px; padding-bottom: 50px", components: [
+	        {kind: enyo.HFlexBox, name: "box", components: [
 	            // Web view to show the chart
-	            {kind: enyo.WebView, width: "800px", name: "showCharts"}  
+	            {kind: enyo.WebView, name: "showCharts"}  
 	        ]}
 	    ]}
 	],

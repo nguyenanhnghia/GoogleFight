@@ -2,6 +2,7 @@ enyo.kind({
 	name: "GoogleFight.MainWindow",
 	kind: enyo.VFlexBox,
 	components: [
+	    {kind: "ApplicationEvents", onWindowRotated: "resizeComponents"},
         {kind: enyo.Menu, name: "optionMenu", showHideMode: "transition",
         	openClassName: "scaleIn", className: "transitioner3", layoutKind: enyo.VFlexLayout, components: [
 			{content: "Drawing Options", className: "popup-header"},
@@ -42,7 +43,9 @@ enyo.kind({
   	 	]}
 	],
 	// After the application completed laucnching, set to fight view
-	ready: function() {
+	create: function(launchParams) {
+		this.inherited(arguments);
+		this.resizeComponents();
 		this.goHome();
 	},
 	// Function for clicking in Home radio button
@@ -60,7 +63,6 @@ enyo.kind({
 	goFight: function() {
 		this.$.mainWindow.selectViewByName("optionWindow");
 		this.resetRadioButton(this.$.lbFights, this.$.lbHome, this.$.lbShare);
-		//this.$.fightWindow.$.drawingCanvas.clearCanvas();
 	},
 	// Set to share window view
 	goShare: function(){
@@ -92,7 +94,19 @@ enyo.kind({
 		btn1.setDepressed(true);
 		btn2.setDepressed(false);
 		btn3.setDepressed(false);
+	},
+	// Resize components for landscape or portrait
+	resizeComponents: function() {
+		if(enyo.getWindowOrientation() == "right" || enyo.getWindowOrientation() == "left") {
+			this.$.fightWindow.$.firstFighter.setClassName("landscape-input");
+			this.$.fightWindow.$.secondFighter.setClassName("landscape-input");
+			this.$.fightWindow.$.box.setClassName("landscape-box");
+			this.$.fightWindow.$.showCharts.setClassName("landscape-webview");
+		} else {
+			this.$.fightWindow.$.firstFighter.setClassName("portrait-input");
+			this.$.fightWindow.$.secondFighter.setClassName("portrait-input");
+			this.$.fightWindow.$.box.setClassName("portrait-box");
+			this.$.fightWindow.$.showCharts.setClassName("portrait-webview");
+		}
 	}
 });
-
-

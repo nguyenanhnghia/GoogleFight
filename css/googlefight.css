@@ -8,6 +8,30 @@
 	background-color: white
 }
 
+.portrait-input {
+	width: 400px
+}
+
+.landscape-input {
+	width: 300px
+}
+
+.portrait-box {
+	padding: 50px 110px 50px 110px
+}
+
+.landscape-box {
+	padding: 200px 30px 200px 30px
+}
+
+.portrait-webview {
+	width: 800px
+}
+
+.landscape-webview {
+	width: 700px
+}
+
 .rowgroup-text {
 	font-size: 1.1em;
 	color: yellow;
