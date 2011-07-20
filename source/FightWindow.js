@@ -31,10 +31,17 @@ enyo.kind({
 	    //{kind: "GoogleFight.DrawingCanvas", name: "drawingCanvas", onFinish: "finishDrawing"}
 	    {kind: enyo.Scroller, flex: 1, components: [
 	        {kind: enyo.HFlexBox, pack: "center", style: "padding-top: 50px; padding-bottom: 50px", components: [
-	            {kind: enyo.WebView, width: "800px", name: "showCharts"}
+				//get result image of Pie chart of Bar char from Google, and show it
+	            {kind: enyo.WebView, width: "800px", name: "showCharts"}  
 	        ]}
 	    ]}
 	],
+	
+	/*  _ start to Fight when user click Fight button 
+		_ if user input space, the popup dialog alarm
+		_ else get value of two textbox and use ajax to find result
+		_ after we have result by Google, we start draw Pie chart and Bar chart
+	*/
     getFighting: function() {
     	this.firstFighterName = this.trimString(this.$.firstFighter.getValue());
     	this.secondFighterName = this.trimString(this.$.secondFighter.getValue());
@@ -44,19 +51,19 @@ enyo.kind({
  	   		|| this.secondFighterName == undefined || this.secondFighterName == "") {
  	   		this.showPopupWithContent("Unable to setup fighting. Please enter your fighters.")
  	   	} else {
- 	   		this.$.fightButton.setActive(true);
- 	   		this.$.fightButton.setDisabled(true);
- 	   		this.$.fightButton.setCaption("Fighting...");
- 	   		
- 	   		//this.$.drawingCanvas.setFirstFighterName(firstFighterName);
- 	   		//this.$.drawingCanvas.setSecondFighterName(secondFighterName);
- 	   		
- 	   		this.firstUrl = "http://www.google.com/search?q=" + this.firstFighterName + "&nomo=1";
- 	   		this.secondUrl = "http://www.google.com/search?q=" + this.secondFighterName + "&nomo=1";
- 	   		
- 	   		// Call first Ajax
- 	   		this.$.getFirstResult.setUrl(this.firstUrl);
- 	   		this.$.getFirstResult.call();
+				this.$.fightButton.setActive(true);
+				this.$.fightButton.setDisabled(true);
+				this.$.fightButton.setCaption("Fighting...");
+				
+				//this.$.drawingCanvas.setFirstFighterName(firstFighterName);
+				//this.$.drawingCanvas.setSecondFighterName(secondFighterName);
+				
+				this.firstUrl = "http://www.google.com/search?q=" + this.firstFighterName + "&nomo=1";
+				this.secondUrl = "http://www.google.com/search?q=" + this.secondFighterName + "&nomo=1";
+				
+				// Call first Ajax
+				this.$.getFirstResult.setUrl(this.firstUrl);
+				this.$.getFirstResult.call();
  	   	}
     },
     getFirstResultSuccess: function(inSender, inResponse, inRequest) {
@@ -105,7 +112,7 @@ enyo.kind({
     	this.showPopupWithContent("Unable to get results. Please check your internet connection or try again!")
     },
     calculate: function() {
-    	var max1, max2, per1, per2;
+    	var max1, max2, per1, per2; // save value after calculate percent, in order to draw chart
     	if(this.firstFighterResult == 0 && this.secondFighterResult == 0) {
     		max1 = max2 = 200;
     		per1 = per2 = 50;
@@ -123,13 +130,15 @@ enyo.kind({
 		if(this.secondFighterName.length > 20)
 			this.secondFighterName = this.secondFighterName.substring(0, 20) + "...";
 		
+		
 		var barChartUrl = "http://chart.apis.google.com/chart?chxt=y&chbh=a,200&chs=800x300&cht=bvg&chco=FF0000,76A4FB&chd=t:" 
 			+ per1 + "|" + per2 + "&chdl=" + per1 + "%|" + per2 + "%&chdlp=t";
     	
     	var pieChartUrl = "http://chart.apis.google.com/chart?chxs=0,000000,25&chs=800x300&cht=p3&chco=FF0000,76A4FB&chd=t:" 
     		+ per1 + "," + per2 + "&chdl=" + this.firstFighterName + "|" + this.secondFighterName + "&chdlp=t&chl=" 
     		+ this.org1 + "(" + per1 + "%)|" + this.org2 + "(" + per2 + "%)";
-    	this.$.showCharts.setUrl(pieChartUrl);
+    	
+		this.$.showCharts.setUrl(pieChartUrl); //show image after pass value to google in order to draw Pie chart and Bar chart
     	this.refreshFightButton();
     	this.$.showCharts.deactivate();
 		
@@ -140,9 +149,11 @@ enyo.kind({
 
 		//this.$.drawingCanvas.startPieChartAnimation();
     },
-    finishDrawing: function() {
-    	this.refreshFightButton();
-    },
+    // finishDrawing: function() {
+    	// this.refreshFightButton();
+    // },
+	
+	//alarm when Google Fight don't search any results
     showPopupWithContent: function(content) {
     	this.$.failurePopup.openAtCenter();
     	this.$.failureText.setContent(content);

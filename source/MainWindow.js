@@ -13,6 +13,7 @@ enyo.kind({
 	        {kind: "GoogleFight.OptionWindow", name: "optionWindow", onSelectFight: "makeFight", className: "googlefight-body"},
 			{kind: "GoogleFight.ShareWindow", name: "shareWindow", className: "googlefight-body"}
         ]},
+		
         {kind: enyo.Toolbar, pack: "justify", components: [
 	        {flex: 1},
             {kind: enyo.RadioToolButtonGroup, components: [
@@ -33,6 +34,7 @@ enyo.kind({
 	goHome: function() {
 		this.$.mainWindow.selectViewByName("fightWindow");
 	},
+	
 	makeFight: function() {
 		this.goHome();
 		this.resetRadioButton(this.$.lbHome, this.$.lbFights, this.$.lbShare);
@@ -42,7 +44,7 @@ enyo.kind({
 	goFight: function() {
 		this.$.mainWindow.selectViewByName("optionWindow");
 		this.resetRadioButton(this.$.lbFights, this.$.lbHome, this.$.lbShare);
-		this.$.fightWindow.$.drawingCanvas.clearCanvas();
+		//this.$.fightWindow.$.drawingCanvas.clearCanvas();
 	},
 	goShare: function(){
 		this.$.mainWindow.selectViewByName("shareWindow");
