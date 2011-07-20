@@ -3,6 +3,7 @@ enyo.kind({
 	kind: enyo.VFlexBox,
 	components: [
 		{
+			//call mail service in order to send mail to anyone who user want to send
 			name: "openEmailCall",
 			kind: "PalmService",
 			service: "palm://com.palm.applicationManager/",
@@ -13,6 +14,7 @@ enyo.kind({
 			subscribe: true
 		},
 		{
+			//call browser service
 		    name: "launchBrowserCall",
 		    kind: "PalmService",
 		    service: "palm://com.palm.applicationManager/",
@@ -23,6 +25,7 @@ enyo.kind({
 		    subscribe: true
 		},
 		{
+			//call sms service 
 			name: "smsService", 
 			kind: "PalmService", 
 			service: "palm://com.palm.applicationManager/", 
@@ -45,8 +48,14 @@ enyo.kind({
 		{label: "Share with a friend ",iconPath: "images/mail-32.png"}, 
 		{label: "SMS to friend",iconPath: "images/messaging.png"} 
 	], 
-	openEmailSuccess : function (inSender,inResponse){ enyo.log("Open success, results="+JSON.stringify(inResponse)); },
-	openEmailFailure : function (inSender,inResponse){ enyo.log("Open failure, results="+JSON.stringify(inSender)); },
+	openEmailSuccess : function (inSender,inResponse){ 
+		enyo.log("Open success, results="+JSON.stringify(inResponse)); 
+	},
+	openEmailFailure : function (inSender,inResponse){ 
+		enyo.log("Open failure, results="+JSON.stringify(inSender)); 
+	},
+	
+	// it fire when user choose which service
 	getService: function(inEvent,inIndex){
 		var r = inIndex.rowIndex;
 		switch (r) {
@@ -59,8 +68,8 @@ enyo.kind({
 			case 2: var myString = "http:/\/\www.twitter.com/\itsonmobile";
 					this.$.launchBrowserCall.call({"id": "com.palm.app.browser", "params":{"target": myString}});
 				break;
-			case 3: //this.$.openEmailCall.call({"target": "mailto: holeeSmokes@batman.com"});
-				this.$.openEmailCall.call({
+			case 3: //this.$.openEmailCall.call({"target": "mailto: holeeSmokes@batman.com"}); --call with method open
+				this.$.openEmailCall.call({ // -- call with method launch
 					"id":"com.palm.app.email", 
 					"params":{
 	                   "summary":"Invitation on Google Fight",
@@ -77,9 +86,9 @@ enyo.kind({
 			case 4: var msgTextContent = "I want to play Google Fight with you : http://bit.ly/GooglefightwebOS";
 					var paramsContent = {messageText : msgTextContent};
 					var parametersContent = {id :'com.palm.app.messaging', params : paramsContent};
-					enyo.log(parametersContent);
+					enyo.log(parametersContent); //-- call service with parmater
 					this.$.smsService.call({"id": "com.palm.app.messaging", "params":{"target": paramsContent}});
-					//$.smsService.call({"target":"sms:tli_test_palm@rocketmail.com"});
+					//$.smsService.call({"target":"sms:tli_test_palm@rocketmail.com"}); --call service no parameter
 				break;
 		}
 	},
