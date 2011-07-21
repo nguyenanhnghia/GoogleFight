@@ -35,12 +35,6 @@ enyo.kind({
             {flex: 1}
 	    ]},
 	    {kind: "GoogleFight.DrawingCanvas", name: "drawingCanvas", onFinish: "finishDrawing"}
-	    /*{kind: enyo.Scroller, flex: 1, components: [
-	        {kind: enyo.HFlexBox, name: "box", components: [
-	            // Web view to show the chart
-	            {kind: enyo.WebView, name: "showCharts"}  
-	        ]}
-	    ]}*/
 	],
 	// Begin of clicking fight button
     getFighting: function() {
@@ -150,19 +144,8 @@ enyo.kind({
 		// Pass max height to drawing canvas
 		this.$.drawingCanvas.setMaxHeight1(max1);
 		this.$.drawingCanvas.setMaxHeight2(max2);
-		
-		/* Using google to draw charts
-		// Setup bar chart url for google chart
-		var barChartUrl = "http://chart.apis.google.com/chart?chxt=y&chbh=a,200&chs=800x300&cht=bvg&chco=FF0000,76A4FB&chd=t:" 
-			+ per1 + "|" + per2 + "&chdl=" + this.firstFighterName + " (" + this.org1 + ")|" 
-			+ this.secondFighterName + " (" + this.org2 + ")" + "&chdlp=t&chma=|15";
-    	// Setup pie chart url for google chart
-    	var pieChartUrl = "http://chart.apis.google.com/chart?chxs=0,000000,25&chs=800x300&cht=p3&chco=FF0000,76A4FB&chd=t:" 
-    		+ per1 + "," + per2 + "&chdl=" + this.firstFighterName + "|" + this.secondFighterName + "&chdlp=t&chl=" 
-    		+ this.org1 + " (" + per1 + "%)|" + this.org2 + " (" + per2 + "%)";
-		 */
     	
-    	// Drawing following user's drawing option
+    	// Draw charts following user's drawing option
     	if(this.drawingOption)
     		this.$.drawingCanvas.startBarChartAnimation();
     	else
