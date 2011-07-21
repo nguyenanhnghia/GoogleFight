@@ -11,6 +11,10 @@ enyo.kind({
 				{label:"Pie Chart", name: "cbPieChart", value:1, onclick: "setPieChart"}
 			]}
 		]},
+		{kind: enyo.Popup, name: "sharePopup", showHideMode: "transition", openClassName: "fadeIn", 
+			className: "fadedOut", components: [
+			{kind: enyo.Button, caption: "Close", className: "enyo-button-affirmative", popupHandler: true}
+		]},
 		{kind: enyo.HFlexBox, className: "googlefight-header", components: [
 			{flex: 1},
 			{content: "GOOGLE ", align: "center", style: "color: white;"},
@@ -31,7 +35,7 @@ enyo.kind({
                 {label: "Fights", name: "lbFights", icon: "images/fight.png", onclick:"goFight"},
             ]},
             {flex: 1},
-			{kind: enyo.ToolButton, name: "lbShare", onclick: "goShare", caption: "Share"}
+			{kind: enyo.ToolButton, name: "shareButton", onclick: "goShare", caption: "Share"}
         ]},
         {kind: "AppMenu", components: [
   			{kind: "EditMenu"},
@@ -62,13 +66,12 @@ enyo.kind({
 		this.resetRadioButton(this.$.lbFights, this.$.lbHome, this.$.lbShare);
 	},
 	// Set to share window view
-	goShare: function(){
-		this.$.mainWindow.selectViewByName("shareWindow");
-		this.resetRadioButton( this.$.lbShare,this.$.lbHome, this.$.lbFights);
+	goShare: function(inSender, inEvent) {
+		this.$.sharePopup.openAroundControl(inSender, null, "right");
 	},
 	// Open the drawing option popup
 	openOption: function(inSender, inEvent) {
-		this.$.optionMenu.openAtEvent(inEvent);
+		this.$.optionMenu.openAroundControl(inSender, null, "left");
 	},
 	// Listener of 'onChange' of first checkbox
 	setBarChart: function(inSender) {

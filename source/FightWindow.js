@@ -7,7 +7,6 @@ enyo.kind({
 		canvasHeight: 0
 	},
 	components: [
-	    {kind: "ApplicationEvents", onWindowRotated: "resizeComponents"},
 	    {kind: "WebService", name: "getFirstResult", onSuccess: "getFirstResultSuccess", onFailure: "getFirstResultFailed"},
 	    {kind: "WebService", name: "getSecondResult", onSuccess: "getSecondResultSuccess", onFailure: "getSecondResultFailed"},
 	    {kind: "Popup", name: "failurePopup", components: [
