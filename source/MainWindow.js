@@ -14,18 +14,29 @@ enyo.kind({
 		{kind: enyo.Popup, showHideMode: "transition", openClassName: "fadeIn", 
 			className: "landscape-fadedOut", name: "sharePopup", components: [
 			    {content: "Share", className: "popup-header"},                                                                    	
-				{name: "listAccounts",kind: "PalmService",service: "palm://com.palm.service.accounts/",method: "launch"},
-				{
+			    {
+					//call mail service in order to send mail to anyone who user want to send
 					name: "openEmailCall",
 					kind: "PalmService",
 					service: "palm://com.palm.applicationManager/",
 					method: "open",
-					onSuccess: "openEmailSuccess",
-					onFailure: "openEmailFailure",
-					onResponse: "gotResponse",
 					subscribe: true
 				},
-				{name: "AppManService", kind: "PalmService", service: "palm://com.palm.applicationManager/", method: "open"}, 
+				{
+					//call browser service
+				    name: "launchBrowserCall",
+				    kind: "PalmService",
+				    service: "palm://com.palm.applicationManager/",
+				    method: "open",
+				    subscribe: true
+				},
+				{
+					//call sms service 
+					name: "smsService", 
+					kind: "PalmService", 
+					service: "palm://com.palm.applicationManager/", 
+					method: "open"
+				},
 				{kind: enyo.BasicScoller, components:[	
 					{kind: "VirtualRepeater", onSetupRow: "setupRow", components: [
 					  {kind: "Item", tapHighlight: true, layoutKind: "HFlexLayout", onclick:"getService", components: [
@@ -75,24 +86,39 @@ enyo.kind({
 		this.resizeComponents();
 		this.goHome();
 	},
-	openEmailSuccess : function (inSender,inResponse){ enyo.log("Open success, results="+JSON.stringify(inResponse)); },
-	openEmailFailure : function (inSender,inResponse){ enyo.log("Open failure, results="+JSON.stringify(inSender)); },
 	getService: function(inEvent,inIndex){
 		var r = inIndex.rowIndex;
 		switch (r) {
-			case 0: 	var myString =	"tel: 555-124-4567";
-									//"tel: 555-124-4567";
-									//"url: http://www.facebook.com/#!/pages/ITS-On-Mobile/138832106129186?ref=search";
-									//"mailto: myemail@email.com";
-									//"And a phone number: 555-124-4567\nAnd a URL: http:\\\\webos101.com";
-					this.$.AppManService.call({target: myString});	
-					console.log("console test");
+			case 0: var myString =	"http:/\/\www.facebook.com/\#!/\pages/\ITS-On-Mobile/\138832106129186?ref=search";													
+					this.$.launchBrowserCall.call({"id": "com.palm.app.browser", "params":{"target": myString}});	
 				break;
-			case 1: this.log("this test");
+			case 1: var myString = "http:/\/\www.facebook.com/\#!/\pages/\ITS-On-Mobile/\138832106129186?ref=search";
+					this.$.launchBrowserCall.call({"id": "com.palm.app.browser", "params":{"target": myString}});
 				break;
-			case 2: enyo.log("enyo test");
+			case 2: var myString = "http:/\/\www.twitter.com/\itsonmobile";
+					this.$.launchBrowserCall.call({"id": "com.palm.app.browser", "params":{"target": myString}});
 				break;
-			case 3: this.$.openEmailCall.call({"target": "chatWith: holeeSmokes@batman.com"});
+			case 3: //this.$.openEmailCall.call({"target": "mailto: holeeSmokes@batman.com"}); --call with method open
+				this.$.openEmailCall.call({ // -- call with method launch
+					"id":"com.palm.app.email", 
+					"params":{
+	                   "summary":"Invitation on Google Fight",
+	                   "text":"<a href ='http://www.google.com/search?q=google+fight'>Google Fight</a>",
+	                   "recipients":[
+	                    {
+	                        "type":"email",
+	                        "contactDisplay":"Mr Nicolas",
+	                        "role":1,
+	                        "value":"tli_test_palm@rocketmail.com"
+	                     }]
+							} });
+				break;
+			case 4: var msgTextContent = "I want to play Google Fight with you : http://bit.ly/GooglefightwebOS";
+					var paramsContent = {messageText : msgTextContent};
+					var parametersContent = {id :'com.palm.app.messaging', params : paramsContent};
+					enyo.log(parametersContent); 
+					//this.$.smsService.call(parametersContent); --call method launch
+					this.$.smsService.call({"target":"im:tli_test_palm@rocketmail.com"}); //--call method open
 				break;
 		}
 	},
