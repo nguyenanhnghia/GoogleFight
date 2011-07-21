@@ -2,7 +2,9 @@ enyo.kind({
 	name: "GoogleFight.FightWindow",
 	kind: enyo.VFlexBox,
 	published: {
-		drawingOption: true // property to get the drawing option from user
+		drawingOption: true, // property to get the drawing option from user
+		canvasWidth: 0,
+		canvasHeight: 0
 	},
 	components: [
 	    {kind: "ApplicationEvents", onWindowRotated: "resizeComponents"},
@@ -32,13 +34,13 @@ enyo.kind({
             	onclick: "getFighting", width: "200px", caption: "Fight"},
             {flex: 1}
 	    ]},
-	    //{kind: "GoogleFight.DrawingCanvas", name: "drawingCanvas", onFinish: "finishDrawing"}
-	    {kind: enyo.Scroller, flex: 1, components: [
+	    {kind: "GoogleFight.DrawingCanvas", name: "drawingCanvas", onFinish: "finishDrawing"}
+	    /*{kind: enyo.Scroller, flex: 1, components: [
 	        {kind: enyo.HFlexBox, name: "box", components: [
 	            // Web view to show the chart
 	            {kind: enyo.WebView, name: "showCharts"}  
 	        ]}
-	    ]}
+	    ]}*/
 	],
 	// Begin of clicking fight button
     getFighting: function() {
@@ -49,7 +51,7 @@ enyo.kind({
     	// Check the inputs
  	   	if(this.firstFighterName == undefined || this.firstFighterName == ""
  	   		|| this.secondFighterName == undefined || this.secondFighterName == "") {
- 	   		this.showPopupWithContent("Unable to setup fighting. Please enter your fighters.")
+ 	   		//this.showPopupWithContent("Unable to setup fighting. Please enter your fighters.");
  	   	} else {
  	   		// Format the fight button to active
 			this.setFightActive();
@@ -75,7 +77,7 @@ enyo.kind({
     		} else {
     			// Remove 'results' string and comma
     			this.firstFighterResult = tempString1.substring(0, tempString1.indexOf(" ")).replace(/^\s*/, "").replace(/\s*$/, "");
-    			this.org1 = this.firstFighterResult;
+    			this.$.drawingCanvas.setResult1(this.firstFighterResult);
 	    		for(var i = 0; i < this.firstFighterResult.length; i++)
 	    			this.firstFighterResult = this.firstFighterResult.replace(",", "");
 	    		
@@ -99,14 +101,12 @@ enyo.kind({
     		}
     		else {
     			this.secondFighterResult = tempString2.substring(0, tempString2.indexOf(" ")).replace(/^\s*/, "").replace(/\s*$/, "");
-    			this.org2 = this.secondFighterResult;
+    			this.$.drawingCanvas.setResult2(this.secondFighterResult);
 	    		for(var i = 0; i < this.secondFighterResult.length; i++)
 	    			this.secondFighterResult = this.secondFighterResult.replace(",", "");
 	    		
 	    		this.secondFighterResult = parseInt(this.secondFighterResult);
     		}
-    		
-    		// 
     		this.calculate();
     	} else {
     		this.getSecondResultFailed();
@@ -116,12 +116,15 @@ enyo.kind({
     	this.showPopupWithContent("Unable to get results. Please check your internet connection or try again!")
     },
     calculate: function() {
-    	var per1, per2; // properties for obtaining percentage
+    	var max1, max2, per1, per2; // properties for drawing
     	if(this.firstFighterResult == 0 && this.secondFighterResult == 0) {
+    		max1 = max2 = (this.canvasHeight - 100) / 2;
     		per1 = per2 = 50;
     	} else {
     		// Calculate percentage of 2 fighters
 			total = this.firstFighterResult + this.secondFighterResult;
+			max1 = Math.floor((this.firstFighterResult / total) * (this.canvasHeight - 100));
+			max2 = Math.floor((this.secondFighterResult / total) * (this.canvasHeight - 100));
 			per1 = Math.floor((this.firstFighterResult / total) * 100);
 			per2 = 100 - per1;
     	}
@@ -132,6 +135,23 @@ enyo.kind({
 		if(this.secondFighterName.length > 20)
 			this.secondFighterName = this.secondFighterName.substring(0, 20) + "...";
 		
+		// Pass canvas width and height to drawing canvas
+		this.$.drawingCanvas.setCanWidth(this.canvasWidth);
+		this.$.drawingCanvas.setCanHeight(this.canvasHeight);
+		
+		// Pass the fighter names to drawing canvas
+		this.$.drawingCanvas.setName1(this.firstFighterName);
+		this.$.drawingCanvas.setName2(this.secondFighterName);
+		
+		// Pass percentage to drawing canvas
+		this.$.drawingCanvas.setPercentage1(per1);
+		this.$.drawingCanvas.setPercentage2(per2);
+		
+		// Pass max height to drawing canvas
+		this.$.drawingCanvas.setMaxHeight1(max1);
+		this.$.drawingCanvas.setMaxHeight2(max2);
+		
+		/* Using google to draw charts
 		// Setup bar chart url for google chart
 		var barChartUrl = "http://chart.apis.google.com/chart?chxt=y&chbh=a,200&chs=800x300&cht=bvg&chco=FF0000,76A4FB&chd=t:" 
 			+ per1 + "|" + per2 + "&chdl=" + this.firstFighterName + " (" + this.org1 + ")|" 
@@ -140,13 +160,13 @@ enyo.kind({
     	var pieChartUrl = "http://chart.apis.google.com/chart?chxs=0,000000,25&chs=800x300&cht=p3&chco=FF0000,76A4FB&chd=t:" 
     		+ per1 + "," + per2 + "&chdl=" + this.firstFighterName + "|" + this.secondFighterName + "&chdlp=t&chl=" 
     		+ this.org1 + " (" + per1 + "%)|" + this.org2 + " (" + per2 + "%)";
+		 */
     	
     	// Drawing following user's drawing option
     	if(this.drawingOption)
-    		this.$.showCharts.setUrl(barChartUrl);
+    		this.$.drawingCanvas.startBarChartAnimation();
     	else
-    		this.$.showCharts.setUrl(pieChartUrl);
-    	this.setFightDeactive();
+    		this.$.drawingCanvas.startPieChartAnimation();
     },
 	//alarm when Google Fight don't search any results
     showPopupWithContent: function(content) {
@@ -155,6 +175,9 @@ enyo.kind({
     },
     closeFailurePopup: function() {
     	this.$.failurePopup.close();
+    	this.setFightDeactive();
+    },
+    finishDrawing: function() {
     	this.setFightDeactive();
     },
     setFightActive: function() {

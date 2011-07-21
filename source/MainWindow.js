@@ -30,19 +30,19 @@ enyo.kind({
         {kind: enyo.Toolbar, pack: "justify", components: [
 	        {kind: enyo.ToolButton, name: "optionButton", onclick: "openOption", caption: "Option"},
 	        {flex: 1},
-            {kind: enyo.RadioToolButtonGroup, components: [
+            {kind: enyo.RadioToolButtonGroup, flex: 2, components: [
                 {label: "Home", name: "lbHome", icon: "images/home.png", onclick:"goHome"},
                 {label: "Fights", name: "lbFights", icon: "images/fight.png", onclick:"goFight"},
                 {label: "Share", name: "lbShare", icon: "images/share.png", onclick: "goShare"}
             ]},
-            {flex: 1},
+            {flex: 2},
         ]},
         {kind: "AppMenu", components: [
   			{kind: "EditMenu"},
   	        {caption: "Preference"}
   	 	]}
 	],
-	// After the application completed laucnching, set to fight view
+	// After the application completed launching, set to fight view
 	create: function(launchParams) {
 		this.inherited(arguments);
 		this.resizeComponents();
@@ -58,6 +58,7 @@ enyo.kind({
 		this.resetRadioButton(this.$.lbHome, this.$.lbFights, this.$.lbShare);
 		this.$.fightWindow.$.firstFighter.setValue(this.$.optionWindow.first);
 		this.$.fightWindow.$.secondFighter.setValue(this.$.optionWindow.second);
+		this.$.fightWindow.getFighting();
 	},
 	// Set to option window view
 	goFight: function() {
@@ -75,18 +76,30 @@ enyo.kind({
 	},
 	// Listener of 'onChange' of first checkbox
 	setBarChart: function(inSender) {
-		if(inSender.getChecked())
+		if(inSender.getChecked()) {
 			this.$.cbPieChart.setChecked(false);
-		else 
+			this.$.fightWindow.$.drawingCanvas.stopAnimation();
+			this.$.fightWindow.$.drawingCanvas.startBarChartAnimation();
+		}
+		else { 
 			this.$.cbPieChart.setChecked(true);
+			this.$.fightWindow.$.drawingCanvas.stopAnimation();
+			this.$.fightWindow.$.drawingCanvas.startPieChartAnimation();
+		}
 		this.$.fightWindow.setDrawingOption(inSender.getChecked());
 	},
 	// Listener of 'onChange' of second checkbox
 	setPieChart: function(inSender) {
-		if(inSender.getChecked())
+		if(inSender.getChecked()) {
 			this.$.cbBarChart.setChecked(false);
-		else 
+			this.$.fightWindow.$.drawingCanvas.stopAnimation();
+			this.$.fightWindow.$.drawingCanvas.startPieChartAnimation();
+		}
+		else {
 			this.$.cbBarChart.setChecked(true);
+			this.$.fightWindow.$.drawingCanvas.stopAnimation();
+			this.$.fightWindow.$.drawingCanvas.startBarChartAnimation();
+		}
 		this.$.fightWindow.setDrawingOption(!inSender.getChecked());
 	},
 	// Function to reset the radio buttons to the right status
@@ -100,13 +113,15 @@ enyo.kind({
 		if(enyo.getWindowOrientation() == "right" || enyo.getWindowOrientation() == "left") {
 			this.$.fightWindow.$.firstFighter.setClassName("landscape-input");
 			this.$.fightWindow.$.secondFighter.setClassName("landscape-input");
-			this.$.fightWindow.$.box.setClassName("landscape-box");
-			this.$.fightWindow.$.showCharts.setClassName("landscape-webview");
+			this.$.fightWindow.setCanvasWidth(760);
+			this.$.fightWindow.setCanvasHeight(650);
 		} else {
 			this.$.fightWindow.$.firstFighter.setClassName("portrait-input");
 			this.$.fightWindow.$.secondFighter.setClassName("portrait-input");
-			this.$.fightWindow.$.box.setClassName("portrait-box");
-			this.$.fightWindow.$.showCharts.setClassName("portrait-webview");
+			this.$.fightWindow.setCanvasWidth(1020);
+			this.$.fightWindow.setCanvasHeight(450);
 		}
+		this.$.fightWindow.$.drawingCanvas.stopAnimation();
+		this.$.fightWindow.getFighting();
 	}
 });

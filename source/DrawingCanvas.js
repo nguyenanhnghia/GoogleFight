@@ -2,19 +2,17 @@ enyo.kind({
 	name: "GoogleFight.DrawingCanvas",
 	kind: enyo.Control,
 	nodeTag: "canvas",
-	domAttributes: { 
-    	width: "1020px", 
-    	height: "480px"
-	},
 	published: {
+		canWidth: 0,
+		canHeight: 0,
 		maxHeight1: 0,
 		maxHeight2: 0,
-		firstFighterName: "",
-		secondFighterName: "",
-		firstFighterResultString: "",
-		secondFighterResultString: "",
-		firstPercent: 0,
-		secondPercent: 0
+		name1: "",
+		name2: "",
+		result1: "",
+		result2: "",
+		percentage1: 0,
+		percentage2: 0
 	},
 	events: {
 		onFinish: ""
@@ -26,21 +24,11 @@ enyo.kind({
 		this.ctx = this.can.getContext('2d');
 		this.ctx.lineWidth = 5;
 		
-		// Params for drawing bar charts
-		this.firstFighterX = this.can.width / 4;		
-		this.secondFighterX = this.can.width - (this.can.width / 4);
-		this.fighterY = 400;
 		this.width = 100;
 		this.height1 = 0;
 		this.height2 = 0;
-		this.heightInterval = -5;
 		
-		// Params for drawing pie chart
-		this.centerX = this.can.width / 2;
-		this.centerY = this.can.height / 2 + 10;
-		this.startAngle = - Math.PI / 2;
 		this.radius = 10;
-		this.radiusInterval = 5;
 		
 		this.timeInterval = 10;
 	},
@@ -100,37 +88,31 @@ enyo.kind({
 		this.ctx.stroke();
 	},
 	drawChartStatistics: function() {
-		if(this.firstFighterName.length > 20)
-			this.firstFighterName = this.firstFighterName.substring(0, 20) + "...";
-		
-		if(this.secondFighterName.length > 20)
-			this.secondFighterName = this.secondFighterName.substring(0, 20) + "...";
-		
 		var mul = 5;
-		var x1 = this.firstFighterResultString.length * mul;
-		var x2 = this.secondFighterResultString.length * mul;
-		var name1 = this.firstFighterName.length * mul;
-		var name2 = this.secondFighterName.length * mul;
-		var per1 = (this.firstPercent + "%").length * mul;
-		var per2 = (this.secondPercent + "%").length * mul;
-		var perDrawingPoint1 = 400 - this.maxHeight1;
-		var perDrawingPoint2 = 400 - this.maxHeight2;
+		var x1 = this.result1.length * mul;
+		var x2 = this.result2.length * mul;
+		var name1 = this.name1.length * mul;
+		var name2 = this.name2.length * mul;
+		var per1 = (this.percentage1 + "%").length * mul;
+		var per2 = (this.percentage2 + "%").length * mul;
+		var perDrawingPoint1 = this.canHeight - 50 - this.maxHeight1;
+		var perDrawingPoint2 = this.canHeight - 50 - this.maxHeight2;
 		this.ctx.font = "15pt Calibri";
 		this.ctx.fillStyle = "green";
 		
 		// Draw statistic for first fighter
-	    this.ctx.fillText(this.firstFighterResultString, this.firstFighterX - x1, this.fighterY + 20);
-	    this.ctx.fillText(this.firstFighterName, this.firstFighterX - name1, this.fighterY + 40)
-	    this.ctx.fillText(this.firstPercent + "%", this.firstFighterX - per1, perDrawingPoint1 - 10);
+	    this.ctx.fillText(this.result1, this.firstFighterX - x1, this.fighterY + 20);
+	    this.ctx.fillText(this.name1, this.firstFighterX - name1, this.fighterY + 40)
+	    this.ctx.fillText(this.percentage1 + "%", this.firstFighterX - per1, perDrawingPoint1 - 10);
 	    
 	    // Draw statistic for second fighter
-	    this.ctx.fillText(this.secondFighterResultString, this.secondFighterX - x2, this.fighterY + 20);
-	    this.ctx.fillText(this.secondFighterName, this.secondFighterX - name2, this.fighterY + 40)
-	    this.ctx.fillText(this.secondPercent + "%", this.secondFighterX - per2, perDrawingPoint2 - 10);
+	    this.ctx.fillText(this.result2, this.secondFighterX - x2, this.fighterY + 20);
+	    this.ctx.fillText(this.name2, this.secondFighterX - name2, this.fighterY + 40)
+	    this.ctx.fillText(this.percentage2 + "%", this.secondFighterX - per2, perDrawingPoint2 - 10);
 	},
 	pieChartAnimation: function() {
-		this.endAngle = (this.secondPercent / 100) * 2 * Math.PI + this.startAngle;
-		if(this.firstPercent >= this.secondPercent) {
+		this.endAngle = (this.percentage2 / 100) * 2 * Math.PI + this.startAngle;
+		if(this.percentage1 >= this.percentage2) {
 			this.fillStyle1 = "#8ED6FF";
 			this.fillStyle2 = "red";
 		} else {
@@ -140,8 +122,9 @@ enyo.kind({
 		this.ctx.strokeStyle = "black";
 		
 		this.radius += this.radiusInterval;
-		if(this.radius >= 210) {
-			this.radius = 210;
+		var maxRadius = (this.canWidth >= this.canHeight ? (this.canHeight / 2) - 20 : (this.canWidth / 2) - 20);
+		if(this.radius >= maxRadius) {
+			this.radius = maxRadius;
 			this.drawPieChart();
 			this.stopAnimation();
 			this.doFinish();
@@ -170,7 +153,7 @@ enyo.kind({
 	drawPieChartStatistics: function() {
 		
 	},
-	startChartAnimation: function() {
+	startBarChartAnimation: function() {
 		this.job = window.setInterval(enyo.hitch(this, "chartAnimation"), this.timeInterval);
 	},
 	startPieChartAnimation: function() {
@@ -187,6 +170,26 @@ enyo.kind({
 		this.radius = 10;
 	},
 	clearCanvas: function() {
-		this.can.width = this.can.width;
+		this.can.width = this.canWidth;
+		this.can.height = this.canHeight;
+		
+		// Params for drawing bar charts
+		this.firstFighterX = this.canWidth / 4;		
+		this.secondFighterX = this.canWidth - this.firstFighterX;
+		this.fighterY = this.canHeight - 50;
+		
+		if(this.canHeight == 700) {
+			this.heightInterval = -10;
+			this.radiusInterval = 10;
+		}
+		else {
+			this.heightInterval = -5;
+			this.radiusInterval = 10;
+		}
+		
+		// Params for drawing pie chart
+		this.centerX = this.canWidth / 2;
+		this.centerY = this.canHeight / 2 + 15;
+		this.startAngle = - Math.PI / 2;
 	}
 });
