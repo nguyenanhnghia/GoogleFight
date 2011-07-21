@@ -26,7 +26,6 @@ enyo.kind({
 	        {kind: "GoogleFight.OptionWindow", name: "optionWindow", onSelectFight: "makeFight", className: "googlefight-body"},
 			{kind: "GoogleFight.ShareWindow", name: "shareWindow", className: "googlefight-body"}
         ]},
-		
         {kind: enyo.Toolbar, pack: "justify", components: [
 	        {kind: enyo.ToolButton, name: "optionButton", onclick: "openOption", caption: "Option"},
 	        {flex: 1},
