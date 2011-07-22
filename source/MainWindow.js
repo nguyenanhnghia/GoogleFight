@@ -6,20 +6,21 @@ enyo.kind({
         {kind: enyo.Menu, name: "optionMenu", showHideMode: "transition",
         	openClassName: "fadeIn", className: "fadedOut popup-option", layoutKind: enyo.VFlexLayout, components: [
 				{content: "Drawing Options", className: "popup-header"},
-				{kind: "RadioGroup", components: [
+				{kind: "RadioToolButtonGroup", className: "option-group", components: [
 					{label:"Bar Chart", name: "cbBarChart", value: 0, onclick: "setBarChart"},
 					{label:"Pie Chart", name: "cbPieChart", value: 1, onclick: "setPieChart"}
 				]}
 		]},
 		{kind: enyo.Popup, showHideMode: "transition", openClassName: "fadeIn", 
-			className: "fadedOut", width: "400px", name: "sharePopup", components: [
-			    {content: "Share", className: "popup-header"},                                                                    	
+			className: "fadedOut", width: "400px", name: "sharePopup", components: [                                                                	
 			    {
 					//call mail service in order to send mail to anyone who user want to send
 					name: "openEmailCall",
 					kind: "PalmService",
 					service: "palm://com.palm.applicationManager/",
 					method: "open",
+					onSuccess: "openEmailSuccess",
+					onFailure: "openEmailFailure",
 					subscribe: true
 				},
 				{
@@ -120,6 +121,13 @@ enyo.kind({
 					this.$.smsService.call({"target":"im:tli_test_palm@rocketmail.com"}); //--call method open
 				break;
 		}
+	},
+	openEmailSuccess : function (inSender,inResponse){ 
+		enyo.log("insender:"+JSON.stringify(inSender));
+		enyo.log("Open success, results="+JSON.stringify(inResponse)); 
+	},
+	openEmailFailure : function (inSender,inResponse){ 
+		enyo.log("Open failure, results="+JSON.stringify(inSender)); 
 	},
 	setupRow: function(inSender, inIndex) {
 	  var row = this.dataShare[inIndex];
