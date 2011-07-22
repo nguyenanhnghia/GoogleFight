@@ -11,9 +11,30 @@ enyo.kind({
 				{label:"Pie Chart", name: "cbPieChart", value:1, onclick: "setPieChart"}
 			]}
 		]},
-		{kind: enyo.Popup, name: "sharePopup", showHideMode: "transition", openClassName: "fadeIn", 
-			className: "fadedOut", components: [
-			{kind: enyo.Button, caption: "Close", className: "enyo-button-affirmative", popupHandler: true}
+		{kind: enyo.Popup, showHideMode: "transition", openClassName: "fadeIn", 
+			className: "fadedOut", name: "sharePopup", width: "500px", components: [
+			    {content:"Share", className:"popup-header"},                                                                    	
+				{name: "listAccounts",kind: "PalmService",service: "palm://com.palm.service.accounts/",method: "launch"},
+				{
+					name: "openEmailCall",
+					kind: "PalmService",
+					service: "palm://com.palm.applicationManager/",
+					method: "open",
+					onSuccess: "openEmailSuccess",
+					onFailure: "openEmailFailure",
+					onResponse: "gotResponse",
+					subscribe: true
+				},
+				{name: "AppManService", kind: "PalmService", service: "palm://com.palm.applicationManager/", method: "open"}, 
+				{kind: enyo.BasicScoller, components:[	
+					{kind: "VirtualRepeater", onSetupRow: "setupRow", components: [
+					  {kind: "Item", tapHighlight: true, layoutKind: "HFlexLayout", onclick:"getService", components: [
+						{kind: "ToolButton", name: "shareIcon"},
+						{name: "shareTitle",style: "padding-top: 15px"}
+					  ]}
+					]},
+				]},
+                {kind: enyo.Button, caption: "Close", className: "enyo-button-affirmative", popupHandler: true}
 		]},
 		{kind: enyo.HFlexBox, className: "googlefight-header", components: [
 			{flex: 1},
@@ -42,11 +63,48 @@ enyo.kind({
   	        {caption: "Preference"}
   	 	]}
 	],
+	dataShare:[
+	   		{label: "Share on Facebook",iconPath: "images/facebook-32.png"}, 
+	   		{label: "I Like",iconPath: "images/facebook-32.png"}, 
+	   		{label: "Follow us on Twitter",iconPath: "images/twitter-32.png"}, 
+	   		{label: "Share with a friend ",iconPath: "images/mail-32.png"}, 
+	   		{label: "SMS to friend",iconPath: "images/messaging.png"} 
+   	],
 	// After the application completed launching, set to fight view
 	create: function(launchParams) {
 		this.inherited(arguments);
 		this.resizeComponents();
 		this.goHome();
+	},
+	openEmailSuccess : function (inSender,inResponse){ enyo.log("Open success, results="+JSON.stringify(inResponse)); },
+	openEmailFailure : function (inSender,inResponse){ enyo.log("Open failure, results="+JSON.stringify(inSender)); },
+	getService: function(inEvent,inIndex){
+		var r = inIndex.rowIndex;
+		switch (r) {
+			case 0: 	var myString =	"tel: 555-124-4567";
+									//"tel: 555-124-4567";
+									//"url: http://www.facebook.com/#!/pages/ITS-On-Mobile/138832106129186?ref=search";
+									//"mailto: myemail@email.com";
+									//"And a phone number: 555-124-4567\nAnd a URL: http:\\\\webos101.com";
+					this.$.AppManService.call({target: myString});	
+					console.log("console test");
+				break;
+			case 1: this.log("this test");
+				break;
+			case 2: enyo.log("enyo test");
+				break;
+			case 3: this.$.openEmailCall.call({"target": "chatWith: holeeSmokes@batman.com"});
+				break;
+		}
+	},
+	setupRow: function(inSender, inIndex) {
+	  var row = this.dataShare[inIndex];
+	  if (row) {
+		  this.$.shareIcon.setIcon(row.iconPath);
+		  this.$.shareIcon.disabled = true;
+		  this.$.shareTitle.setContent(row.label);
+		  return true;
+	  }
 	},
 	// Function for clicking in Home radio button
 	goHome: function() {
