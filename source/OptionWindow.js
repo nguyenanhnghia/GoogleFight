@@ -35,11 +35,11 @@ enyo.kind({
 			{kind: enyo.BasicScroller,components:[
    				{kind: "VirtualRepeater", name:"listCategory", onSetupRow:"setupRowModal", components: [
    					{kind: "Item",tapHighlight: true, onclick:"setSelectFight", className:"option-item", layoutKind: "HFlexLayout", components: [
-   						{name:"captionFItem1"},
+   						{name:"captionFItem1",width:"100px" },
    						{flex:1},
    						{content:"VS", style: "color: red"},
    						{flex:1},
-   						{name:"captionFItem2"}
+   						{name:"captionFItem2",width:"100px"}
    					]}
    				]},	
    			]},
