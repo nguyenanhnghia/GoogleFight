@@ -194,6 +194,7 @@ enyo.kind({
 			this.$.fightWindow.setCanvasHeight(500);
 		}
 		this.$.fightWindow.$.drawingCanvas.stopAnimation();
+		this.$.fightWindow.$.drawingCanvas.clearCanvas();
 		this.$.fightWindow.getFighting();
 	}
 });
