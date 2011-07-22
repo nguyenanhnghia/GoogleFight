@@ -141,7 +141,7 @@ enyo.kind({
     		+ this.org1 + " (" + per1 + "%)|" + this.org2 + " (" + per2 + "%)";
     	
     	// Drawing following user's drawing option
-    	if(this.drawingOption)
+    	if(this.drawingOption == 0)
     		this.$.showCharts.setUrl(barChartUrl);
     	else
     		this.$.showCharts.setUrl(pieChartUrl);

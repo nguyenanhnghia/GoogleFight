@@ -86,9 +86,9 @@ enyo.kind({
 			case 4: var msgTextContent = "I want to play Google Fight with you : http://bit.ly/GooglefightwebOS";
 					var paramsContent = {messageText : msgTextContent};
 					var parametersContent = {id :'com.palm.app.messaging', params : paramsContent};
-					enyo.log(parametersContent); //-- call service with parmater
-					this.$.smsService.call({"id": "com.palm.app.messaging", "params":{"target": paramsContent}});
-					//$.smsService.call({"target":"sms:tli_test_palm@rocketmail.com"}); --call service no parameter
+					enyo.log(parametersContent); 
+					//this.$.smsService.call(parametersContent); --call method launch
+					this.$.smsService.call({"target":"im:tli_test_palm@rocketmail.com"}); //--call method open
 				break;
 		}
 	},
