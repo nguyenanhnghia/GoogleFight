@@ -2,9 +2,6 @@ enyo.kind({
 	name: "GoogleFight.DrawingCanvas",
 	kind: enyo.Control,
 	nodeTag: "canvas",
-	domAttributes: {
-		style: "border: 2px solid #000;"
-	},
 	published: {
 		canWidth: 0,
 		canHeight: 0,
