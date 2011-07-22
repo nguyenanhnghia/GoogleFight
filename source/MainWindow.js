@@ -186,12 +186,12 @@ enyo.kind({
 			this.$.fightWindow.$.firstFighter.setClassName("landscape-input");
 			this.$.fightWindow.$.secondFighter.setClassName("landscape-input");
 			this.$.fightWindow.setCanvasWidth(760);
-			this.$.fightWindow.setCanvasHeight(650);
+			this.$.fightWindow.setCanvasHeight(700);
 		} else {
 			this.$.fightWindow.$.firstFighter.setClassName("portrait-input");
 			this.$.fightWindow.$.secondFighter.setClassName("portrait-input");
 			this.$.fightWindow.setCanvasWidth(1020);
-			this.$.fightWindow.setCanvasHeight(450);
+			this.$.fightWindow.setCanvasHeight(500);
 		}
 		this.$.fightWindow.$.drawingCanvas.stopAnimation();
 		this.$.fightWindow.getFighting();

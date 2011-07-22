@@ -62,6 +62,7 @@ enyo.kind({
     		// Check if there is a result
     		if(tempString1.indexOf("results") == -1) {
 	    		this.firstFighterResult = 0;
+	    		this.$.drawingCanvas.setResult1("");
     		} else {
     			// Remove 'results' string and comma
     			this.firstFighterResult = tempString1.substring(0, tempString1.indexOf(" ")).replace(/^\s*/, "").replace(/\s*$/, "");
@@ -86,6 +87,7 @@ enyo.kind({
     		var tempString2 = inResponse.substring(inResponse.indexOf("resultStats>") + 18, inResponse.indexOf("<nobr>"));
     		if(tempString2.indexOf("results") == -1) {
     			this.secondFighterResult = 0;
+    			this.$.drawingCanvas.setResult2("");
     		}
     		else {
     			this.secondFighterResult = tempString2.substring(0, tempString2.indexOf(" ")).replace(/^\s*/, "").replace(/\s*$/, "");
