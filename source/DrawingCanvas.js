@@ -33,42 +33,44 @@ enyo.kind({
 		this.timeInterval = 10;
 	},
 	chartAnimation: function() {
-		this.clearCanvas();
-		
-		if(this.maxHeight1 > this.maxHeight2) {
-			this.fillStyle1 = "#8ED6FF";
-			this.fillStyle2 = "red";
-		} else {
-			this.fillStyle1 = "red";
-			this.fillStyle2 = "#8ED6FF";
-		}
-		this.ctx.strokeStyle = "black";
-		
-		var isComplete1 = false;
-		var isComplete2 = false;
-		
-		this.height1 = this.height1 + this.heightInterval;
-		if(this.height1 <= -this.maxHeight1) {
-			this.height1 = -this.maxHeight1;
-			this.drawFirstChart();
-			isComplete1 = true;
-		}
-		else
-			this.drawFirstChart();
-		
-		this.height2 = this.height2 + this.heightInterval;
-		if(this.height2 <= -this.maxHeight2) {
-			this.height2 = -this.maxHeight2;
-			this.drawSecondChart();
-			isComplete2 = true;
-		}
-		else
-			this.drawSecondChart();
-		
-		if(isComplete1 && isComplete2) {
-			this.stopAnimation();
-			this.drawChartStatistics();
-			this.doFinish();
+		if(this.name1 != "" && this.name2 != "") {
+			this.clearCanvas();
+			
+			if(this.maxHeight1 > this.maxHeight2) {
+				this.fillStyle1 = "#8ED6FF";
+				this.fillStyle2 = "red";
+			} else {
+				this.fillStyle1 = "red";
+				this.fillStyle2 = "#8ED6FF";
+			}
+			this.ctx.strokeStyle = "black";
+			
+			var isComplete1 = false;
+			var isComplete2 = false;
+			
+			this.height1 = this.height1 + this.heightInterval;
+			if(this.height1 <= -this.maxHeight1) {
+				this.height1 = -this.maxHeight1;
+				this.drawFirstChart();
+				isComplete1 = true;
+			}
+			else
+				this.drawFirstChart();
+			
+			this.height2 = this.height2 + this.heightInterval;
+			if(this.height2 <= -this.maxHeight2) {
+				this.height2 = -this.maxHeight2;
+				this.drawSecondChart();
+				isComplete2 = true;
+			}
+			else
+				this.drawSecondChart();
+			
+			if(isComplete1 && isComplete2) {
+				this.stopAnimation();
+				this.drawChartStatistics();
+				this.doFinish();
+			}
 		}
 	},
 	drawFirstChart: function() {
@@ -111,25 +113,28 @@ enyo.kind({
 	    this.ctx.fillText(this.percentage2 + "%", this.secondFighterX - per2, perDrawingPoint2 - 10);
 	},
 	pieChartAnimation: function() {
-		this.endAngle = (this.percentage2 / 100) * 2 * Math.PI + this.startAngle;
-		if(this.percentage1 >= this.percentage2) {
-			this.fillStyle1 = "#8ED6FF";
-			this.fillStyle2 = "red";
-		} else {
-			this.fillStyle1 = "red";
-			this.fillStyle2 = "#8ED6FF";
+		if(this.name1 != "" && this.name2 != "") {
+			this.endAngle = (this.percentage2 / 100) * 2 * Math.PI + this.startAngle;
+			if(this.percentage1 >= this.percentage2) {
+				this.fillStyle1 = "#8ED6FF";
+				this.fillStyle2 = "red";
+			} else {
+				this.fillStyle1 = "red";
+				this.fillStyle2 = "#8ED6FF";
+			}
+			this.ctx.strokeStyle = "black";
+			
+			this.radius += this.radiusInterval;
+			var maxRadius = (this.canWidth >= this.canHeight ? (this.canHeight / 2) - 20 : (this.canWidth / 2) - 20);
+			enyo.log(this.radius + ", " + maxRadius);
+			if(this.radius >= maxRadius) {
+				this.radius = maxRadius;
+				this.drawPieChart();
+				this.stopAnimation();
+				this.doFinish();
+			} else
+				this.drawPieChart();
 		}
-		this.ctx.strokeStyle = "black";
-		
-		this.radius += this.radiusInterval;
-		var maxRadius = (this.canWidth >= this.canHeight ? (this.canHeight / 2) - 20 : (this.canWidth / 2) - 20);
-		if(this.radius >= maxRadius) {
-			this.radius = maxRadius;
-			this.drawPieChart();
-			this.stopAnimation();
-			this.doFinish();
-		} else
-			this.drawPieChart();
 	},
 	drawPieChart: function() {
 		this.clearCanvas();
@@ -151,25 +156,30 @@ enyo.kind({
 		this.ctx.stroke();
 	},
 	drawPieChartStatistics: function() {
+		this.ctx.beginPath();
 		
 	},
 	startBarChartAnimation: function() {
+		this.setDrawingParams();
 		this.job = window.setInterval(enyo.hitch(this, "chartAnimation"), this.timeInterval);
 	},
 	startPieChartAnimation: function() {
+		this.setDrawingParams();
 		this.job = window.setInterval(enyo.hitch(this, "pieChartAnimation"), this.timeInterval);
 	},
 	stopAnimation: function() {
-		window.clearInterval(this.job);
+		if(this.job) {
+			window.clearInterval(this.job);
 		
-		// Reset height for drawing bar charts
-		this.height1 = 0;
-		this.height2 = 0;
-		
-		// Reset radius for drawing pie chart
-		this.radius = 10;
+			// Reset height for drawing bar charts
+			this.height1 = 0;
+			this.height2 = 0;
+			
+			// Reset radius for drawing pie chart
+			this.radius = 10;
+		}
 	},
-	clearCanvas: function() {
+	setDrawingParams: function() {
 		this.can.width = this.canWidth;
 		this.can.height = this.canHeight;
 		
@@ -178,7 +188,7 @@ enyo.kind({
 		this.secondFighterX = this.canWidth - this.firstFighterX;
 		this.fighterY = this.canHeight - 50;
 		
-		if(this.canHeight == 700) {
+		if(this.canHeight == 650) {
 			this.heightInterval = -10;
 			this.radiusInterval = 10;
 		}
@@ -191,5 +201,8 @@ enyo.kind({
 		this.centerX = this.canWidth / 2;
 		this.centerY = this.canHeight / 2 + 15;
 		this.startAngle = - Math.PI / 2;
+	},
+	clearCanvas: function() {
+		this.can.width = this.can.width;
 	}
 });
