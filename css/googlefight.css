@@ -72,7 +72,15 @@
 }
 
 
-.fadedOut {
+.portrait-fadedOut {
+	width: 500px;
+	opacity: 0;
+	-webkit-transition-property: opacity;
+	-webkit-transition-duration: 1s;
+}
+
+.landscape-fadedOut {
+	width: 400px;
 	opacity: 0;
 	-webkit-transition-property: opacity;
 	-webkit-transition-duration: 1s;
