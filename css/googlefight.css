@@ -13,7 +13,7 @@
 }
 
 .landscape-input {
-	width: 300px
+	width: 275px
 }
 
 .rowgroup-text {
@@ -24,6 +24,22 @@
 .option-item {
 	font-size: 15px; 
 	color: green
+}
+
+.fight-button {
+	background-color: #101010;
+	color: white; 
+	width: 150px;
+	height: 70px;
+	margin-top: 10px;
+	padding-top: 20px
+}
+
+.popup-option {
+	width: 200px;
+	height: 120px;
+	padding-left: 10px;
+	padding-right: 10px
 }
 
 .popup-header {
@@ -72,16 +88,7 @@
 	opacity: 1;
 }
 
-
-.portrait-fadedOut {
-	width: 500px;
-	opacity: 0;
-	-webkit-transition-property: opacity;
-	-webkit-transition-duration: 1s;
-}
-
-.landscape-fadedOut {
-	width: 400px;
+.fadedOut {
 	opacity: 0;
 	-webkit-transition-property: opacity;
 	-webkit-transition-duration: 1s;

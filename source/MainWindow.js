@@ -4,15 +4,15 @@ enyo.kind({
 	components: [
 	    {kind: "ApplicationEvents", onWindowRotated: "resizeComponents"},
         {kind: enyo.Menu, name: "optionMenu", showHideMode: "transition",
-        	openClassName: "scaleIn", className: "transitioner3", style:"width:200px; height:120px;",layoutKind: enyo.VFlexLayout, components: [
-			{content: "Drawing Options", className: "popup-header"},
-			{kind: "RadioGroup", components: [
-				{label:"Bar Chart", name: "cbBarChart", value:0, onclick: "setBarChart"},
-				{label:"Pie Chart", name: "cbPieChart", value:1, onclick: "setPieChart"}
-			]}
+        	openClassName: "fadeIn", className: "fadedOut popup-option", layoutKind: enyo.VFlexLayout, components: [
+				{content: "Drawing Options", className: "popup-header"},
+				{kind: "RadioGroup", components: [
+					{label:"Bar Chart", name: "cbBarChart", value: 0, onclick: "setBarChart"},
+					{label:"Pie Chart", name: "cbPieChart", value: 1, onclick: "setPieChart"}
+				]}
 		]},
 		{kind: enyo.Popup, showHideMode: "transition", openClassName: "fadeIn", 
-			className: "landscape-fadedOut", name: "sharePopup", components: [
+			className: "fadedOut", width: "400px", name: "sharePopup", components: [
 			    {content: "Share", className: "popup-header"},                                                                    	
 			    {
 					//call mail service in order to send mail to anyone who user want to send
@@ -138,7 +138,7 @@ enyo.kind({
 	// Custom fuction for listening to the event from option window (User chose a fight in the list)
 	makeFight: function() {
 		this.goHome();
-		this.resetRadioButton(this.$.lbHome, this.$.lbFights, this.$.lbShare);
+		this.resetRadioButton(this.$.lbHome, this.$.lbFights);
 		this.$.fightWindow.$.firstFighter.setValue(this.$.optionWindow.first);
 		this.$.fightWindow.$.secondFighter.setValue(this.$.optionWindow.second);
 		this.$.fightWindow.getFighting();
@@ -146,7 +146,7 @@ enyo.kind({
 	// Set to option window view
 	goFight: function() {
 		this.$.mainWindow.selectViewByName("optionWindow");
-		this.resetRadioButton(this.$.lbFights, this.$.lbHome, this.$.lbShare);
+		this.resetRadioButton(this.$.lbFights, this.$.lbHome);
 	},
 	// Set to share window view
 	goShare: function(inSender, inEvent) {
@@ -169,23 +169,20 @@ enyo.kind({
 		this.$.fightWindow.$.drawingCanvas.startPieChartAnimation();
 	},
 	// Function to reset the radio buttons to the right status
-	resetRadioButton: function(btn1, btn2, btn3) {
+	resetRadioButton: function(btn1, btn2) {
 		btn1.setDepressed(true);
 		btn2.setDepressed(false);
-		btn3.setDepressed(false);
 	},
 	// Resize components for landscape or portrait
 	resizeComponents: function() {
 		if(enyo.getWindowOrientation() == "right" || enyo.getWindowOrientation() == "left") {
 			this.$.fightWindow.$.firstFighter.setClassName("landscape-input");
 			this.$.fightWindow.$.secondFighter.setClassName("landscape-input");
-			//this.$.sharePopup.setClassName("landscape-fadedOut");
 			this.$.fightWindow.setCanvasWidth(760);
 			this.$.fightWindow.setCanvasHeight(650);
 		} else {
 			this.$.fightWindow.$.firstFighter.setClassName("portrait-input");
 			this.$.fightWindow.$.secondFighter.setClassName("portrait-input");
-			//this.$.sharePopup.setClassName("portrait-fadedOut");
 			this.$.fightWindow.setCanvasWidth(1020);
 			this.$.fightWindow.setCanvasHeight(450);
 		}

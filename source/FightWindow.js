@@ -21,18 +21,13 @@ enyo.kind({
 	        {kind: enyo.RowGroup, caption: "First Fighter", className: "rowgroup-text", layoutKind: enyo.HFlexLayout, components: [
 	            {kind: enyo.RoundedInput, name: "firstFighter", autoCapitalize: "lowercase"}
 	        ]},
-	        {flex: 1},
+	        {kind: enyo.ActivityButton, name: "fightButton", className: "fight-button",  
+            	onclick: "getFighting", caption: "Fight"},
 	        {kind: enyo.RowGroup, caption: "Second Fighter", layoutKind: enyo.HFlexLayout, components: [
    	            {kind: enyo.RoundedInput, name: "secondFighter", autoCapitalize: "lowercase"}
    	        ]},
 	        {flex: 1}
         ]},
-	    {kind: enyo.HFlexBox, pack: "justify", components: [
-            {flex: 1},
-            {kind: enyo.ActivityButton, name: "fightButton", className: "enyo-button-dark",  
-            	onclick: "getFighting", width: "200px", caption: "Fight"},
-            {flex: 1}
-	    ]},
 	    {kind: "GoogleFight.DrawingCanvas", name: "drawingCanvas", onFinish: "finishDrawing"}
 	],
 	// Begin of clicking fight button
