@@ -6,14 +6,13 @@ enyo.kind({
         {kind: enyo.Menu, name: "optionMenu", showHideMode: "transition",
         	openClassName: "fadeIn", className: "fadedOut popup-option", layoutKind: enyo.VFlexLayout, components: [
 				{content: "Drawing Options", className: "popup-header"},
-				{kind: "RadioGroup", components: [
+				{kind: "RadioToolButtonGroup", className: "option-group", components: [
 					{label:"Bar Chart", name: "cbBarChart", value: 0, onclick: "setBarChart"},
 					{label:"Pie Chart", name: "cbPieChart", value: 1, onclick: "setPieChart"}
 				]}
 		]},
 		{kind: enyo.Popup, showHideMode: "transition", openClassName: "fadeIn", 
-			className: "fadedOut", width: "400px", name: "sharePopup", components: [
-			    {content: "Share", className: "popup-header"},                                                                    	
+			className: "fadedOut", width: "400px", name: "sharePopup", components: [                                                                	
 			    {
 					//call mail service in order to send mail to anyone who user want to send
 					name: "openEmailCall",
@@ -46,8 +45,7 @@ enyo.kind({
 						{name: "shareTitle",style: "padding-top: 15px"}
 					  ]}
 					]},
-				]},
-                {kind: enyo.Button, caption: "Close", className: "enyo-button-affirmative", popupHandler: true}
+				]}
 		]},
 		{kind: enyo.HFlexBox, className: "googlefight-header", components: [
 			{flex: 1},

@@ -32,14 +32,22 @@
 	width: 150px;
 	height: 70px;
 	margin-top: 10px;
-	padding-top: 20px
+	padding-top: 20px;
+	font-family: "Helvetica Neue";
+	font-size: 32px;
+	font-style: oblique
 }
 
 .popup-option {
-	width: 200px;
+	width: 230px;
 	height: 120px;
 	padding-left: 10px;
 	padding-right: 10px
+}
+
+.option-group {
+	width: 200px;
+	margin-top: 10px
 }
 
 .popup-header {
