@@ -20,6 +20,8 @@ enyo.kind({
 					kind: "PalmService",
 					service: "palm://com.palm.applicationManager/",
 					method: "open",
+					onSuccess: "openEmailSuccess",
+					onFailure: "openEmailFailure",
 					subscribe: true
 				},
 				{
@@ -121,6 +123,13 @@ enyo.kind({
 					this.$.smsService.call({"target":"im:tli_test_palm@rocketmail.com"}); //--call method open
 				break;
 		}
+	},
+	openEmailSuccess : function (inSender,inResponse){ 
+		enyo.log("insender:"+JSON.stringify(inSender));
+		enyo.log("Open success, results="+JSON.stringify(inResponse)); 
+	},
+	openEmailFailure : function (inSender,inResponse){ 
+		enyo.log("Open failure, results="+JSON.stringify(inSender)); 
 	},
 	setupRow: function(inSender, inIndex) {
 	  var row = this.dataShare[inIndex];
