@@ -44,8 +44,7 @@ enyo.kind({
 						{name: "shareTitle",style: "padding-top: 15px"}
 					  ]}
 					]},
-				]},
-                {kind: enyo.Button, caption: "Close", className: "enyo-button-affirmative", popupHandler: true}
+				]}
 		]},
 		{kind: enyo.HFlexBox, className: "googlefight-header", components: [
 			{flex: 1},
