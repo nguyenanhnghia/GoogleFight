@@ -180,7 +180,7 @@ enyo.kind({
 		btn1.setDepressed(true);
 		btn2.setDepressed(false);
 	},
-	// Resize components for landscape or portrait
+	// Resize components for landscape or portrait view
 	resizeComponents: function() {
 		if(enyo.getWindowOrientation() == "right" || enyo.getWindowOrientation() == "left") {
 			this.$.fightWindow.$.firstFighter.setClassName("landscape-input");

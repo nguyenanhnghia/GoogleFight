@@ -28,15 +28,6 @@ enyo.kind({
 		if(this.name1 != "" && this.name2 != "") {
 			this.clearCanvas();
 			
-			if(this.maxHeight1 > this.maxHeight2) {
-				this.fillStyle1 = "#8ED6FF";
-				this.fillStyle2 = "red";
-			} else {
-				this.fillStyle1 = "red";
-				this.fillStyle2 = "#8ED6FF";
-			}
-			this.ctx.strokeStyle = "black";
-			
 			var isComplete1 = false;
 			var isComplete2 = false;
 			
@@ -92,7 +83,7 @@ enyo.kind({
 		var perDrawingPoint1 = this.canHeight - 50 - this.maxHeight1;
 		var perDrawingPoint2 = this.canHeight - 50 - this.maxHeight2;
 		this.ctx.font = "15pt Calibri";
-		this.ctx.fillStyle = "green";
+		this.ctx.fillStyle = this.statStyle;
 		
 		// Draw statistic for first fighter
 	    this.ctx.fillText(this.result1, this.firstFighterX - x1, this.fighterY + 20);
@@ -107,14 +98,6 @@ enyo.kind({
 	pieChartAnimation: function() {
 		if(this.name1 != "" && this.name2 != "") {
 			this.endAngle = (this.percentage2 / 100) * 2 * Math.PI + this.startAngle;
-			if(this.percentage1 >= this.percentage2) {
-				this.fillStyle1 = "#8ED6FF";
-				this.fillStyle2 = "red";
-			} else {
-				this.fillStyle1 = "red";
-				this.fillStyle2 = "#8ED6FF";
-			}
-			this.ctx.strokeStyle = "black";
 			
 			this.radius += this.radiusInterval;
 			var maxRadius = (this.canWidth >= this.canHeight ? (this.canHeight / 2) - 50 : (this.canWidth / 2) - 50);
@@ -165,16 +148,18 @@ enyo.kind({
 		}
 	},
 	drawPieChartStatistics: function() {
+		// Font for stats
+		this.ctx.font = "15pt Calibri";
+		
 		// Draw first legend square
 		this.ctx.beginPath();
 		this.ctx.rect(this.centerX - 150, this.canHeight - 50, this.legendSize, this.legendSize);
 		this.ctx.fillStyle = this.fillStyle1;
 		this.ctx.fill();
-		this.ctx.stroke();
+		this.ctx.stroke(); 
 		
 		// Draw first result
-		this.ctx.font = "15pt Calibri";
-		this.ctx.fillStyle = "green";
+		this.ctx.fillStyle = this.statStyle;
 		this.ctx.beginPath();
 		this.ctx.fillText(this.name1 + " - " + this.result1 + " (" + this.percentage1 + "%)", 
 				this.centerX - 120, this.canHeight - 33);
@@ -187,7 +172,7 @@ enyo.kind({
 		this.ctx.stroke();
 		
 		// Draw second result
-		this.ctx.fillStyle = "green";
+		this.ctx.fillStyle = this.statStyle;
 		this.ctx.beginPath();
 		this.ctx.fillText(this.name2 + " - " + this.result2 + " (" + this.percentage2 + "%)", 
 				this.centerX - 120, this.canHeight - 4);
@@ -206,23 +191,25 @@ enyo.kind({
 		}
 	},
 	setDrawingParams: function() {
+		// Set width and height for canvas
 		this.can.width = this.canWidth;
 		this.can.height = this.canHeight;
 		
-		this.width = 100;
-		this.timeInterval = 10;
+		// Set time interval for animation
+		this.timeInterval = 15;
 		
 		// Params for drawing bar charts
+		this.width = 100;
 		this.firstFighterX = this.canWidth / 4;		
 		this.secondFighterX = this.canWidth - this.firstFighterX;
 		this.fighterY = this.canHeight - 50;
 		
-		if(this.canHeight == 650) {
-			this.heightInterval = -10;
-			this.radiusInterval = 10;
+		if(this.canHeight == 700) {
+			this.heightInterval = -20;
+			this.radiusInterval = 12;
 		}
 		else {
-			this.heightInterval = -5;
+			this.heightInterval = -10;
 			this.radiusInterval = 10;
 		}
 		
@@ -238,12 +225,24 @@ enyo.kind({
 		this.ctx.shadowOffsetY = 15;   
 		this.ctx.shadowBlur = 5;
 		
-		// Reset height for drawing bar charts
+		// Set height for drawing bar charts
 		this.height1 = 0;
 		this.height2 = 0;
 		
-		// Reset radius for drawing pie chart
+		// Set radius for drawing pie chart
 		this.radius = 10;
+		
+		// Set style for charts
+		if(this.maxHeight1 > this.maxHeight2) {
+			this.fillStyle1 = "#8ED6FF";
+			this.fillStyle2 = "red";
+		} else {
+			this.fillStyle1 = "red";
+			this.fillStyle2 = "#8ED6FF";
+		}
+		this.ctx.strokeStyle = "black";
+		this.statStyle = "green";
+		this.ctx.font = "15pt Calibri";
 	},
 	clearCanvas: function() {
 		this.can.width = this.can.width;
