@@ -12,8 +12,8 @@ enyo.kind({
 			]}
 		]},
 		{kind: enyo.Popup, showHideMode: "transition", openClassName: "fadeIn", 
-			className: "fadedOut", name: "sharePopup", width: "500px", components: [
-			    {content:"Share", className:"popup-header"},                                                                    	
+			className: "landscape-fadedOut", name: "sharePopup", components: [
+			    {content: "Share", className: "popup-header"},                                                                    	
 				{name: "listAccounts",kind: "PalmService",service: "palm://com.palm.service.accounts/",method: "launch"},
 				{
 					name: "openEmailCall",
@@ -154,11 +154,13 @@ enyo.kind({
 		if(enyo.getWindowOrientation() == "right" || enyo.getWindowOrientation() == "left") {
 			this.$.fightWindow.$.firstFighter.setClassName("landscape-input");
 			this.$.fightWindow.$.secondFighter.setClassName("landscape-input");
+			//this.$.sharePopup.setClassName("landscape-fadedOut");
 			this.$.fightWindow.setCanvasWidth(760);
 			this.$.fightWindow.setCanvasHeight(650);
 		} else {
 			this.$.fightWindow.$.firstFighter.setClassName("portrait-input");
 			this.$.fightWindow.$.secondFighter.setClassName("portrait-input");
+			//this.$.sharePopup.setClassName("portrait-fadedOut");
 			this.$.fightWindow.setCanvasWidth(1020);
 			this.$.fightWindow.setCanvasHeight(450);
 		}
