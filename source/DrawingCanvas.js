@@ -2,6 +2,9 @@ enyo.kind({
 	name: "GoogleFight.DrawingCanvas",
 	kind: enyo.Control,
 	nodeTag: "canvas",
+	domAttributes: {
+    	style: "border: 2px solid #000;"
+	},
 	published: {
 		canWidth: 0,
 		canHeight: 0,
@@ -126,7 +129,6 @@ enyo.kind({
 			
 			this.radius += this.radiusInterval;
 			var maxRadius = (this.canWidth >= this.canHeight ? (this.canHeight / 2) - 20 : (this.canWidth / 2) - 20);
-			enyo.log(this.radius + ", " + maxRadius);
 			if(this.radius >= maxRadius) {
 				this.radius = maxRadius;
 				this.drawPieChart();
@@ -201,6 +203,12 @@ enyo.kind({
 		this.centerX = this.canWidth / 2;
 		this.centerY = this.canHeight / 2 + 15;
 		this.startAngle = - Math.PI / 2;
+		
+		// Add shadow for charts
+		this.ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+		this.ctx.shadowOffsetX = 15;
+		this.ctx.shadowOffsetY = 15;   
+		this.ctx.shadowBlur = 5;
 	},
 	clearCanvas: function() {
 		this.can.width = this.can.width;
