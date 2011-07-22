@@ -167,7 +167,7 @@ enyo.kind({
 	drawPieChartStatistics: function() {
 		// Draw first legend square
 		this.ctx.beginPath();
-		this.ctx.rect(this.firstFighterX - 150, this.canHeight - 40, this.legendSize, this.legendSize);
+		this.ctx.rect(this.centerX - 150, this.canHeight - 50, this.legendSize, this.legendSize);
 		this.ctx.fillStyle = this.fillStyle1;
 		this.ctx.fill();
 		this.ctx.stroke();
@@ -177,11 +177,11 @@ enyo.kind({
 		this.ctx.fillStyle = "green";
 		this.ctx.beginPath();
 		this.ctx.fillText(this.name1 + " - " + this.result1 + " (" + this.percentage1 + "%)", 
-				this.firstFighterX - 120, this.canHeight - 23);
+				this.centerX - 120, this.canHeight - 33);
 		
 		// Draw second legend square
 		this.ctx.beginPath();
-		this.ctx.rect(this.secondFighterX - 150, this.canHeight - 40, this.legendSize, this.legendSize);
+		this.ctx.rect(this.centerX - 150, this.canHeight - 20, this.legendSize, this.legendSize);
 		this.ctx.fillStyle = this.fillStyle2;
 		this.ctx.fill();
 		this.ctx.stroke();
@@ -190,7 +190,7 @@ enyo.kind({
 		this.ctx.fillStyle = "green";
 		this.ctx.beginPath();
 		this.ctx.fillText(this.name2 + " - " + this.result2 + " (" + this.percentage2 + "%)", 
-				this.secondFighterX - 120, this.canHeight - 23);
+				this.centerX - 120, this.canHeight - 4);
 	},
 	startBarChartAnimation: function() {
 		this.setDrawingParams();
@@ -228,7 +228,7 @@ enyo.kind({
 		
 		// Params for drawing pie chart
 		this.centerX = this.canWidth / 2;
-		this.centerY = this.canHeight / 2;
+		this.centerY = this.canHeight / 2 - 20;
 		this.startAngle = - Math.PI / 2;
 		this.legendSize = 20;
 		
