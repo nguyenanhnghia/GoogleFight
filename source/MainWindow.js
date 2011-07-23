@@ -61,12 +61,13 @@ enyo.kind({
         {kind: enyo.Toolbar, pack: "justify", components: [
 	        {kind: enyo.ToolButton, name: "optionButton", onclick: "openOption", caption: "Option"},
 	        {flex: 1},
-            {kind: enyo.RadioToolButtonGroup, flex: 2, components: [
+            {kind: enyo.RadioToolButtonGroup, flex: 1, components: [
                 {label: "Home", name: "lbHome", icon: "images/home.png", onclick:"goHome"},
                 {label: "Fights", name: "lbFights", icon: "images/fight.png", onclick:"goFight"},
+                {label: "Share", name: "lbShare", icon: "images/share.png", onclick:"goShare"}
             ]},
             {flex: 1},
-			{kind: enyo.ToolButton, name: "shareButton", onclick: "goShare", caption: "Share"}
+			//{kind: enyo.ToolButton, name: "shareButton", onclick: "goShare", caption: "Share"}
         ]},
         {kind: "AppMenu", components: [
   			{kind: "EditMenu"},
