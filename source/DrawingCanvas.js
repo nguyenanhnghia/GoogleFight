@@ -206,7 +206,7 @@ enyo.kind({
 		
 		if(this.canHeight == 700) {
 			this.heightInterval = -20;
-			this.radiusInterval = 12;
+			this.radiusInterval = 15;
 		}
 		else {
 			this.heightInterval = -10;
@@ -245,6 +245,7 @@ enyo.kind({
 		this.ctx.font = "15pt Calibri";
 	},
 	clearCanvas: function() {
-		this.can.width = this.can.width;
+		if(this.can)
+			this.can.width = this.can.width;
 	}
 });
