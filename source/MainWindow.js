@@ -55,8 +55,7 @@ enyo.kind({
 		]},
         {name: "mainWindow", kind: "Pane", flex: 1, components: [
             {kind: "GoogleFight.FightWindow", name: "fightWindow", className: "googlefight-body"},
-	        {kind: "GoogleFight.OptionWindow", name: "optionWindow", onSelectFight: "makeFight", className: "googlefight-body"},
-			{kind: "GoogleFight.ShareWindow", name: "shareWindow", className: "googlefight-body"}
+	        {kind: "GoogleFight.OptionWindow", name: "optionWindow", onSelectFight: "makeFight", className: "googlefight-body"}
         ]},
         {kind: enyo.Toolbar, pack: "justify", components: [
 	        {kind: enyo.ToolButton, name: "optionButton", onclick: "openOption", caption: "Option"},
@@ -109,13 +108,10 @@ enyo.kind({
 				if(c==""||d=="")
 					myString = link;
 				else
-					myString = "<p>Fisrt Fighter: <span style='color: red'>" + c + "</span> VS "
-						+ "Second Fighter: <span style='color: red'>" + d + "</span></p>" 
-						+ "<p>Percent: <span style='color: red'>" + e 
-						+ "</span> VS <span style='color: red'>" + f + "</span></p>" 
-						+ "<p>Result: <span style='color: red'>" + a + "</span> VS <span style='color: red'>" 
-						+ b + "</span></p>"
-						+"<p>"+link+"</p>";
+					myString = "<p><span style='color: red'>" + c + "</span> VS <span style='color: red'>" + d + "</span></p>" 
+						+ "<p><span style='color: red'>" + e + "</span> VS <span style='color: red'>" + f + "</span></p>" 
+						+ "<p><span style='color: red'>" + a + "</span> VS <span style='color: red'>" + b + "</span></p>"
+						+ "<p>" + link + "</p>";
 				this.$.openEmailCall.call({ // -- call with method launch
 					"id":"com.palm.app.email", 
 					"params":{
@@ -224,7 +220,6 @@ enyo.kind({
 			this.$.fightWindow.setCanvasHeight(500);
 		}
 		this.$.fightWindow.$.drawingCanvas.stopAnimation();
-		this.$.fightWindow.$.drawingCanvas.clearCanvas();
 		this.$.fightWindow.getFighting();
 	}
 });

@@ -32,6 +32,9 @@ enyo.kind({
 	],
 	// Begin of clicking fight button
     getFighting: function() {
+    	// Clear canvas for next fight
+    	this.$.drawingCanvas.clearCanvas();
+    	
     	// Get the input values from user
     	this.firstFighterName = this.trimString(this.$.firstFighter.getValue());
     	this.secondFighterName = this.trimString(this.$.secondFighter.getValue());
