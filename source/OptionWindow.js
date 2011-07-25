@@ -28,16 +28,17 @@ enyo.kind({
 		second: ""
 	},
 	components: [
-	    {kind: "Animator", onBegin: "beginAnimation", onAnimate: "stepAnimation", onEnd: "endAnimation"},
-   		{name: "animatedPopup", kind: "Popup", showHideMode: "manual", onOpen: "animateOpen", onClose: "animateClose",
+	    {kind: enyo.Animator, onBegin: "beginAnimation", onAnimate: "stepAnimation", onEnd: "endAnimation"},
+   		{kind: enyo.Popup, name: "animatedPopup", showHideMode: "manual", onOpen: "animateOpen", onClose: "animateClose",
 			scrim: true, modal: true, dismissWithClick: false, width: "500px", components: [
 			{className: "popup-header", name: "title"},
 			{kind: enyo.BasicScroller,components:[
    				{kind: "VirtualRepeater", name:"listCategory", onSetupRow:"setupRowModal", components: [
-   					{kind: "Item",tapHighlight: true, onclick:"setSelectFight", className:"option-item", layoutKind: "HFlexLayout", components: [
-   						{name:"captionFItem1", className: "caption1"},
-   						{content:"VS", className: "versus"},
-   						{name:"captionFItem2", className: "caption2"}
+   					{kind: "Item", tapHighlight: true, onclick: "setSelectFight", 
+   						className: "option-item", layoutKind: "HFlexLayout", components: [
+   						{name: "captionFItem1", className: "caption1"},
+   						{content: "VS", className: "versus"},
+   						{name: "captionFItem2", className: "caption2"}
    					]}
    				]},	
    			]},

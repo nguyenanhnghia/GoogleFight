@@ -62,64 +62,61 @@ enyo.kind({
 	},
 	/**
 	 * Draws a rounded rectangle using the current state of the canvas.
-	 * @param {CanvasRenderingContext2D} ctx
 	 * @param {Number} x The top left x coordinate
 	 * @param {Number} y The top left y coordinate
 	 * @param {Number} width The width of the rectangle
 	 * @param {Number} height The height of the rectangle
-	 * @param {Number} radius The corner radius. Defaults to 5;
-	 * @param {Boolean} fill Whether to fill the rectangle. Defaults to false.
-	 * @param {Boolean} stroke Whether to stroke the rectangle. Defaults to true.
+	 * @param {Number} radius The corner radius;
 	 */
-	roundRect: function(ctx, x, y, width, height, radius, fill, stroke) {
-	    if (typeof stroke == "undefined" ) {
-	    	stroke = true;
-	    }
-	    if (typeof radius === "undefined") {
-	    	radius = 5;
-	    }
-	    ctx.beginPath();
-	    ctx.moveTo(x + radius, y);
-	    ctx.lineTo(x + width - radius, y);
-	    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-	    ctx.lineTo(x + width, y + height - radius);
-	    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-	    ctx.lineTo(x + radius, y + height);
-	    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-	    ctx.lineTo(x, y + radius);
-	    ctx.quadraticCurveTo(x, y, x + radius, y);
-	    ctx.closePath();
-	    if (stroke) {
-	    	ctx.stroke();
-	    }
-	    if (fill) {
-	    	ctx.fill();
-	    }       
+	roundRect: function(x, y, width, height, radius) {
+		this.ctx.beginPath();
+		this.ctx.moveTo(x + radius, y);
+		this.ctx.lineTo(x + width - radius, y);
+		this.ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+		this.ctx.lineTo(x + width, y + height - radius);
+		this.ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+		this.ctx.lineTo(x + radius, y + height);
+		this.ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+		this.ctx.lineTo(x, y + radius);
+		this.ctx.quadraticCurveTo(x, y, x + radius, y);
+		this.ctx.closePath();
+		this.ctx.stroke();
+		this.ctx.fill();
 	},
-	drawFirstChart: function(y) {
+	drawFirstChart: function() {
+		/*var grad = this.ctx.createLinearGradient(this.firstFighterX - 50, this.y1, this.firstFighterX + 50, this.y1);
+		grad.addColorStop(0, 'black');
+		grad.addColorStop(1, 'white');*/
 		this.ctx.fillStyle = this.fillStyle1;
-		this.roundRect(this.ctx, this.firstFighterX - 50, this.y1, 
-				this.width, this.height1, this.cornerRadius1, true);
+		this.ctx.strokeStyle = this.strokeStyle1;
+		this.roundRect(this.firstFighterX - 50, this.y1, 
+				this.width, this.height1, this.cornerRadius1);
 	},
-	drawSecondChart: function(y) {
+	drawSecondChart: function() {
+		/*var grad = this.ctx.createLinearGradient(this.secondFighterX - 50, this.y2, this.secondFighterX + 50, this.y2);
+		grad.addColorStop(0, 'green');
+		grad.addColorStop(1, 'blue');*/
 		this.ctx.fillStyle = this.fillStyle2;
-		this.roundRect(this.ctx, this.secondFighterX - 50, this.y2, 
-				this.width, this.height2, this.cornerRadius2, true);
+		this.ctx.strokeStyle = this.strokeStyle2;
+		this.roundRect(this.secondFighterX - 50, this.y2, 
+				this.width, this.height2, this.cornerRadius2);
 	},
 	drawChartStatistics: function() {
 		this.ctx.font = this.myFont;
-		this.ctx.fillStyle = this.statStyle;
 		this.ctx.textAlign = "center";
 		
-		// Draw statistic for first fighter
+		// Draw statistics
+		this.ctx.fillStyle = this.statStyle;
 	    this.ctx.fillText(this.result1, this.firstFighterX, this.fighterY + 20);
-	    this.ctx.fillText(this.name1, this.firstFighterX, this.fighterY + 40)
 	    this.ctx.fillText(this.percentage1 + "%", this.firstFighterX, this.fighterY - this.maxHeight1 - 10);
-	    
-	    // Draw statistic for second fighter
 	    this.ctx.fillText(this.result2, this.secondFighterX, this.fighterY + 20);
-	    this.ctx.fillText(this.name2, this.secondFighterX, this.fighterY + 40)
 	    this.ctx.fillText(this.percentage2 + "%", this.secondFighterX, this.fighterY - this.maxHeight2 - 10);
+	    
+	    // Draw fighter name
+	    this.ctx.fillStyle = this.nameStyle;
+	    this.ctx.fillText(this.name1, this.firstFighterX, this.fighterY + 40)
+	    this.ctx.fillText(this.name2, this.secondFighterX, this.fighterY + 40)
+	    
 	},
 	pieChartAnimation: function() {
 		if(this.name1 != "" && this.name2 != "") {
@@ -145,6 +142,7 @@ enyo.kind({
 			this.ctx.arc(this.centerX, this.centerY, this.radius, this.startAngle, this.endAngle, false);
 			this.ctx.closePath();
 			this.ctx.fillStyle = this.fillStyle2;
+			this.ctx.strokeStyle = this.strokeStyle2;
 			this.ctx.fill();
 			this.ctx.stroke();
 		} else if(this.percentage2 == 0) {
@@ -153,6 +151,7 @@ enyo.kind({
 			this.ctx.arc(this.centerX, this.centerY, this.radius, this.startAngle, this.endAngle, true);
 			this.ctx.closePath();
 			this.ctx.fillStyle = this.fillStyle1;
+			this.ctx.strokeStyle = this.strokeStyle1;
 			this.ctx.fill();
 			this.ctx.stroke();
 		} else {
@@ -161,6 +160,7 @@ enyo.kind({
 			this.ctx.lineTo(this.centerX, this.centerY);
 			this.ctx.closePath();
 			this.ctx.fillStyle = this.fillStyle1;
+			this.ctx.strokeStyle = this.strokeStyle1;
 			this.ctx.fill();
 			this.ctx.stroke();
 			
@@ -169,6 +169,7 @@ enyo.kind({
 			this.ctx.lineTo(this.centerX, this.centerY);
 			this.ctx.closePath();
 			this.ctx.fillStyle = this.fillStyle2;
+			this.ctx.strokeStyle = this.strokeStyle2;
 			this.ctx.fill();
 			this.ctx.stroke();
 		}
@@ -182,6 +183,7 @@ enyo.kind({
 		this.ctx.beginPath();
 		this.ctx.rect(this.centerX - 150, this.canHeight - 50, this.legendSize, this.legendSize);
 		this.ctx.fillStyle = this.fillStyle1;
+		this.ctx.strokeStyle = this.strokeStyle1;
 		this.ctx.fill();
 		this.ctx.stroke(); 
 		
@@ -195,6 +197,7 @@ enyo.kind({
 		this.ctx.beginPath();
 		this.ctx.rect(this.centerX - 150, this.canHeight - 20, this.legendSize, this.legendSize);
 		this.ctx.fillStyle = this.fillStyle2;
+		this.ctx.strokeStyle = this.strokeStyle2;
 		this.ctx.fill();
 		this.ctx.stroke();
 		
@@ -267,14 +270,15 @@ enyo.kind({
 		
 		// Set style for charts
 		if(this.maxHeight1 > this.maxHeight2) {
-			this.fillStyle1 = "#8ED6FF";
-			this.fillStyle2 = "red";
+			this.strokeStyle1 = this.fillStyle1 = "#dd6a17";
+			this.strokeStyle2 = this.fillStyle2 = "#3ab54a";
 		} else {
-			this.fillStyle1 = "red";
-			this.fillStyle2 = "#8ED6FF";
+			this.strokeStyle2 = this.fillStyle2 = "#dd6a17";
+			this.strokeStyle1 = this.fillStyle1 = "#3ab54a";
 		}
-		this.ctx.strokeStyle = "black";
-		this.statStyle = "green";
+		//this.defaultStrokeStyle = "black";
+		this.statStyle = "blue";
+		this.nameStyle = "black";
 		this.myFont = "15pt Calibri";
 	},
 	clearCanvas: function() {
