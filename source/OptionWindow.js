@@ -30,20 +30,18 @@ enyo.kind({
 	components: [
 	    {kind: "Animator", onBegin: "beginAnimation", onAnimate: "stepAnimation", onEnd: "endAnimation"},
    		{name: "animatedPopup", kind: "Popup", showHideMode: "manual", onOpen: "animateOpen", onClose: "animateClose",
-			scrim: true, modal: true, dismissWithClick: false, width: "400px", components: [
+			scrim: true, modal: true, dismissWithClick: false, width: "500px", components: [
 			{className: "popup-header", name: "title"},
 			{kind: enyo.BasicScroller,components:[
    				{kind: "VirtualRepeater", name:"listCategory", onSetupRow:"setupRowModal", components: [
    					{kind: "Item",tapHighlight: true, onclick:"setSelectFight", className:"option-item", layoutKind: "HFlexLayout", components: [
-   						{name:"captionFItem1",width:"100px" },
-   						{flex:1},
-   						{content:"VS", style: "color: red"},
-   						{flex:1},
-   						{name:"captionFItem2",width:"100px"}
+   						{name:"captionFItem1", className: "caption1"},
+   						{content:"VS", className: "versus"},
+   						{name:"captionFItem2", className: "caption2"}
    					]}
    				]},	
    			]},
-   			{kind: "Button", caption: "Close", onclick: "closeClick", className: "enyo-button-affirmative"}
+   			{kind: "Button", caption: "Close", onclick: "closeClick", className: "option-item-closebutton"}
 		]},
 		{kind: enyo.Scroller, flex: 1, components:[
 			{kind: enyo.HFlexBox, pack: "center", className: "fight-list", components: [
