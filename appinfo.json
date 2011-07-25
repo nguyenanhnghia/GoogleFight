@@ -1,7 +1,7 @@
 {
-	"id": "com.tli.googlefight",
+	"id": "com.its.googlefight",
 	"version": "1.0.0",
-	"vendor": "TLi",
+	"vendor": "ITS",
 	"type": "web",
 	"main": "index.html",
 	"title": "Google Fight",

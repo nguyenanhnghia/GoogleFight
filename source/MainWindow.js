@@ -61,17 +61,15 @@ enyo.kind({
         {kind: enyo.Toolbar, pack: "justify", components: [
 	        {kind: enyo.ToolButton, name: "optionButton", onclick: "openOption", caption: "Option"},
 	        {flex: 1},
-            {kind: enyo.RadioToolButtonGroup, flex: 1, components: [
+            {kind: enyo.RadioToolButtonGroup, className: "center-toolbuttons", flex: 1, components: [
                 {label: "Home", name: "lbHome", icon: "images/home.png", onclick:"goHome"},
                 {label: "Fights", name: "lbFights", icon: "images/fight.png", onclick:"goFight"},
                 {label: "Share", name: "lbShare", icon: "images/share.png", onclick:"goShare"}
             ]},
-            {flex: 1},
-			//{kind: enyo.ToolButton, name: "shareButton", onclick: "goShare", caption: "Share"}
+            {flex: 1}
         ]},
         {kind: "AppMenu", components: [
-  			{kind: "EditMenu"},
-  	        {caption: "Preference"}
+  			{kind: "EditMenu"}
   	 	]}
 	],
 	dataShare:[
@@ -139,26 +137,35 @@ enyo.kind({
 		  return true;
 	  }
 	},
-	// Function for clicking in Home radio button
-	goHome: function() {
-		this.$.mainWindow.selectViewByName("fightWindow");
-	},
-	// Custom fuction for listening to the event from option window (User chose a fight in the list)
+	// Custom function for listening to the event from option window (User chose a fight in the list)
 	makeFight: function() {
 		this.goHome();
-		this.resetRadioButton(this.$.lbHome, this.$.lbFights);
 		this.$.fightWindow.$.firstFighter.setValue(this.$.optionWindow.first);
 		this.$.fightWindow.$.secondFighter.setValue(this.$.optionWindow.second);
 		this.$.fightWindow.getFighting();
+	},
+	// Function for clicking in Home radio button
+	goHome: function() {
+		this.$.mainWindow.selectViewByName("fightWindow");
+		this.resetRadioButton(this.$.lbHome, this.$.lbFights);
+		this.isHome = true;
+		this.isFight = false;
 	},
 	// Set to option window view
 	goFight: function() {
 		this.$.mainWindow.selectViewByName("optionWindow");
 		this.resetRadioButton(this.$.lbFights, this.$.lbHome);
+		this.isHome = false;
+		this.isFight = true;
 	},
-	// Set to share window view
+	// Open share popup
 	goShare: function(inSender, inEvent) {
-		this.$.sharePopup.openAroundControl(inSender, null, "right");
+		inSender.setDepressed(false);
+		this.$.sharePopup.openAroundControl(inSender, null, "left");
+		if(this.isHome)
+			this.resetRadioButton(this.$.lbHome, this.$.lbFights);
+		if(this.isFight)
+			this.resetRadioButton(this.$.lbFights, this.$.lbHome);
 	},
 	// Open the drawing option popup
 	openOption: function(inSender, inEvent) {
