@@ -7,12 +7,12 @@ enyo.kind({
         	openClassName: "fadeIn", className: "fadedOut popup-option", layoutKind: enyo.VFlexLayout, components: [
 				{content: "Drawing Options", className: "popup-header"},
 				{kind: "RadioToolButtonGroup", className: "option-group", components: [
-					{label:"Bar Chart", name: "cbBarChart", value: 0, onclick: "setBarChart"},
-					{label:"Pie Chart", name: "cbPieChart", value: 1, onclick: "setPieChart"}
+					{label: "Bar Chart", name: "cbBarChart", value: 0, onclick: "setBarChart"},
+					{label: "Pie Chart", name: "cbPieChart", value: 1, onclick: "setPieChart"}
 				]}
 		]},
 		{kind: enyo.Popup, showHideMode: "transition", openClassName: "fadeIn", 
-			className: "fadedOut", width: "400px", name: "sharePopup", components: [                                                                	
+			className: "fadedOut", width: "320px", name: "sharePopup", components: [                                                                	
 			    {
 					//call mail service in order to send mail to anyone who user want to send
 					name: "openEmailCall",
@@ -60,7 +60,7 @@ enyo.kind({
         {kind: enyo.Toolbar, pack: "justify", components: [
 	        {kind: enyo.ToolButton, name: "optionButton", onclick: "openOption", caption: "Option"},
 	        {flex: 1},
-            {kind: enyo.RadioToolButtonGroup, className: "center-toolbuttons", flex: 1, components: [
+            {kind: enyo.RadioToolButtonGroup, className: "center-toolbuttons", flex: 2, components: [
                 {label: "Home", name: "lbHome", icon: "images/home.png", onclick:"goHome"},
                 {label: "Fights", name: "lbFights", icon: "images/fight.png", onclick:"goFight"},
                 {label: "Share", name: "lbShare", icon: "images/share.png", onclick:"goShare"}

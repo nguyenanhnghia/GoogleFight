@@ -145,6 +145,7 @@ enyo.kind({
 		this.$.drawingCanvas.setMaxHeight2(max2);
     	
     	// Draw charts following user's drawing option
+		this.$.drawingCanvas.stopAnimation();
     	if(this.drawingOption == 0)
     		this.$.drawingCanvas.startBarChartAnimation();
     	else

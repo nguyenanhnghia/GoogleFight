@@ -31,18 +31,22 @@ enyo.kind({
 			var isComplete1 = false;
 			var isComplete2 = false;
 			
-			this.height1 = this.height1 + this.heightInterval;
-			if(this.height1 <= -this.maxHeight1) {
-				this.height1 = -this.maxHeight1;
+			this.height1 += this.heightInterval;
+			this.y1 -= this.heightInterval;
+			if(this.height1 >= this.maxHeight1) {
+				this.height1 = this.maxHeight1;
+				this.y1 = this.fighterY - this.maxHeight1;
 				this.drawFirstChart();
 				isComplete1 = true;
 			}
 			else
 				this.drawFirstChart();
 			
-			this.height2 = this.height2 + this.heightInterval;
-			if(this.height2 <= -this.maxHeight2) {
-				this.height2 = -this.maxHeight2;
+			this.height2 += this.heightInterval;
+			this.y2 -= this.heightInterval;
+			if(this.height2 >= this.maxHeight2) {
+				this.height2 = this.maxHeight2;
+				this.y2 = this.fighterY - this.maxHeight2;
 				this.drawSecondChart();
 				isComplete2 = true;
 			}
@@ -56,44 +60,66 @@ enyo.kind({
 			}
 		}
 	},
-	drawFirstChart: function() {
-		this.ctx.beginPath();
-		this.ctx.rect(this.firstFighterX - 50, this.fighterY, this.width, this.height1);
-
-		this.ctx.fillStyle = this.fillStyle1;
-		this.ctx.fill();
-		this.ctx.stroke();
+	/**
+	 * Draws a rounded rectangle using the current state of the canvas.
+	 * @param {CanvasRenderingContext2D} ctx
+	 * @param {Number} x The top left x coordinate
+	 * @param {Number} y The top left y coordinate
+	 * @param {Number} width The width of the rectangle
+	 * @param {Number} height The height of the rectangle
+	 * @param {Number} radius The corner radius. Defaults to 5;
+	 * @param {Boolean} fill Whether to fill the rectangle. Defaults to false.
+	 * @param {Boolean} stroke Whether to stroke the rectangle. Defaults to true.
+	 */
+	roundRect: function(ctx, x, y, width, height, radius, fill, stroke) {
+	    if (typeof stroke == "undefined" ) {
+	    	stroke = true;
+	    }
+	    if (typeof radius === "undefined") {
+	    	radius = 5;
+	    }
+	    ctx.beginPath();
+	    ctx.moveTo(x + radius, y);
+	    ctx.lineTo(x + width - radius, y);
+	    ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+	    ctx.lineTo(x + width, y + height - radius);
+	    ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+	    ctx.lineTo(x + radius, y + height);
+	    ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+	    ctx.lineTo(x, y + radius);
+	    ctx.quadraticCurveTo(x, y, x + radius, y);
+	    ctx.closePath();
+	    if (stroke) {
+	    	ctx.stroke();
+	    }
+	    if (fill) {
+	    	ctx.fill();
+	    }       
 	},
-	drawSecondChart: function() {
-		this.ctx.beginPath();
-		this.ctx.rect(this.secondFighterX - 50, this.fighterY, this.width, this.height2);
-
+	drawFirstChart: function(y) {
+		this.ctx.fillStyle = this.fillStyle1;
+		this.roundRect(this.ctx, this.firstFighterX - 50, this.y1, 
+				this.width, this.height1, this.cornerRadius1, true);
+	},
+	drawSecondChart: function(y) {
 		this.ctx.fillStyle = this.fillStyle2;
-		this.ctx.fill();
-		this.ctx.stroke();
+		this.roundRect(this.ctx, this.secondFighterX - 50, this.y2, 
+				this.width, this.height2, this.cornerRadius2, true);
 	},
 	drawChartStatistics: function() {
-		var mul = 5;
-		var x1 = this.result1.length * mul;
-		var x2 = this.result2.length * mul;
-		var name1 = this.name1.length * mul;
-		var name2 = this.name2.length * mul;
-		var per1 = (this.percentage1 + "%").length * mul;
-		var per2 = (this.percentage2 + "%").length * mul;
-		var perDrawingPoint1 = this.canHeight - 50 - this.maxHeight1;
-		var perDrawingPoint2 = this.canHeight - 50 - this.maxHeight2;
-		this.ctx.font = "15pt Calibri";
+		this.ctx.font = this.myFont;
 		this.ctx.fillStyle = this.statStyle;
+		this.ctx.textAlign = "center";
 		
 		// Draw statistic for first fighter
-	    this.ctx.fillText(this.result1, this.firstFighterX - x1, this.fighterY + 20);
-	    this.ctx.fillText(this.name1, this.firstFighterX - name1, this.fighterY + 40)
-	    this.ctx.fillText(this.percentage1 + "%", this.firstFighterX - per1, perDrawingPoint1 - 10);
+	    this.ctx.fillText(this.result1, this.firstFighterX, this.fighterY + 20);
+	    this.ctx.fillText(this.name1, this.firstFighterX, this.fighterY + 40)
+	    this.ctx.fillText(this.percentage1 + "%", this.firstFighterX, this.fighterY - this.maxHeight1 - 10);
 	    
 	    // Draw statistic for second fighter
-	    this.ctx.fillText(this.result2, this.secondFighterX - x2, this.fighterY + 20);
-	    this.ctx.fillText(this.name2, this.secondFighterX - name2, this.fighterY + 40)
-	    this.ctx.fillText(this.percentage2 + "%", this.secondFighterX - per2, perDrawingPoint2 - 10);
+	    this.ctx.fillText(this.result2, this.secondFighterX, this.fighterY + 20);
+	    this.ctx.fillText(this.name2, this.secondFighterX, this.fighterY + 40)
+	    this.ctx.fillText(this.percentage2 + "%", this.secondFighterX, this.fighterY - this.maxHeight2 - 10);
 	},
 	pieChartAnimation: function() {
 		if(this.name1 != "" && this.name2 != "") {
@@ -149,7 +175,8 @@ enyo.kind({
 	},
 	drawPieChartStatistics: function() {
 		// Font for stats
-		this.ctx.font = "15pt Calibri";
+		this.ctx.font = this.myFont;
+		this.ctx.textAlign = "left";
 		
 		// Draw first legend square
 		this.ctx.beginPath();
@@ -200,17 +227,27 @@ enyo.kind({
 		
 		// Params for drawing bar charts
 		this.width = 100;
+		this.height1 = 0;
+		this.height2 = 0;
 		this.firstFighterX = this.canWidth / 4;		
 		this.secondFighterX = this.canWidth - this.firstFighterX;
-		this.fighterY = this.canHeight - 50;
+		this.fighterY =  this.canHeight - 50;
+		this.y1 = this.y2 = this.fighterY;
+		this.cornerRadius1 = this.cornerRadius2 = 10;
 		
+		if(this.maxHeight1 <= 10)
+			this.cornerRadius1 = 0;
+		if(this.maxHeight2 <= 10)
+			this.cornerRadius2 = 0;
+		
+		// Change intervals for faster drawing
 		if(this.canHeight == 700) {
-			this.heightInterval = -20;
-			this.radiusInterval = 15;
+			this.heightInterval = 20;
+			this.radiusInterval = 20;
 		}
 		else {
-			this.heightInterval = -10;
-			this.radiusInterval = 10;
+			this.heightInterval = 15;
+			this.radiusInterval = 15;
 		}
 		
 		// Params for drawing pie chart
@@ -222,14 +259,10 @@ enyo.kind({
 		// Add shadow for charts
 		this.ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
 		this.ctx.shadowOffsetX = 15;
-		this.ctx.shadowOffsetY = 15;   
+		this.ctx.shadowOffsetY = 15;
 		this.ctx.shadowBlur = 5;
 		
-		// Set height for drawing bar charts
-		this.height1 = 0;
-		this.height2 = 0;
-		
-		// Set radius for drawing pie chart
+		// Set default radius for drawing pie chart
 		this.radius = 10;
 		
 		// Set style for charts
@@ -242,7 +275,7 @@ enyo.kind({
 		}
 		this.ctx.strokeStyle = "black";
 		this.statStyle = "green";
-		this.ctx.font = "15pt Calibri";
+		this.myFont = "15pt Calibri";
 	},
 	clearCanvas: function() {
 		if(this.can)
