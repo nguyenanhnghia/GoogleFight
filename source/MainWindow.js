@@ -36,7 +36,7 @@ enyo.kind({
 					name: "smsService", 
 					kind: "PalmService", 
 					service: "palm://com.palm.applicationManager/", 
-					method: "open"
+					method: "launch"
 				},
 				{kind: enyo.BasicScoller, components:[	
 					{kind: "VirtualRepeater", onSetupRow: "setupRow", components: [
@@ -98,11 +98,29 @@ enyo.kind({
 					this.$.launchBrowserCall.call({"id": "com.palm.app.browser", "params":{"target": myString}});
 				break;
 			case 3: //this.$.openEmailCall.call({"target": "mailto: holeeSmokes@batman.com"}); --call with method open
+				var myString = "";
+				var link = "<a href ='http://www.twitter.com/itsonmobile'>ITS_GoogleFight</a>";
+				var a = this.$.fightWindow.$.drawingCanvas.getResult1();
+				var b = this.$.fightWindow.$.drawingCanvas.getResult2();
+				var c = this.$.fightWindow.$.drawingCanvas.getName1();
+				var d = this.$.fightWindow.$.drawingCanvas.getName2();
+				var e = this.$.fightWindow.$.drawingCanvas.getPercentage1()+"%";
+				var f = this.$.fightWindow.$.drawingCanvas.getPercentage2()+"%";
+				if(c==""||d=="")
+					myString = link;
+				else
+					myString = "<p>Fisrt Fighter: <span style='color: red'>" + c + "</span> VS "
+						+ "Second Fighter: <span style='color: red'>" + d + "</span></p>" 
+						+ "<p>Percent: <span style='color: red'>" + e 
+						+ "</span> VS <span style='color: red'>" + f + "</span></p>" 
+						+ "<p>Result: <span style='color: red'>" + a + "</span> VS <span style='color: red'>" 
+						+ b + "</span></p>"
+						+"<p>"+link+"</p>";
 				this.$.openEmailCall.call({ // -- call with method launch
 					"id":"com.palm.app.email", 
 					"params":{
 	                   "summary":"Invitation on Google Fight",
-	                   "text":"<a href ='http://www.google.com/search?q=google+fight'>Google Fight</a>",
+	                   "text": myString,
 	                   "recipients":[
 	                    {
 	                        "type":"email",
@@ -112,21 +130,25 @@ enyo.kind({
 	                     }]
 							} });
 				break;
-			case 4: var msgTextContent = "I want to play Google Fight with you : http://bit.ly/GooglefightwebOS";
-					var paramsContent = {messageText : msgTextContent};
-					var parametersContent = {id :'com.palm.app.messaging', params : paramsContent};
-					enyo.log(parametersContent); 
-					//this.$.smsService.call(parametersContent); --call method launch
-					this.$.smsService.call({"target":"im:tli_test_palm@rocketmail.com"}); //--call method open
+			case 4: 
+				this.$.smsService.call({ // -- call with method launch
+					"id":"com.palm.app.messaging", 
+					"params":{
+						"recipients":[
+					                    {
+					                       "value":"tli_test_palm@rocketmail.com"
+					                     }]
+					} 
+				});
+				//var msgTextContent = "I want to play Google Fight with you : http://bit.ly/GooglefightwebOS";
+				//	var paramsContent = {"contactDisplay" : msgTextContent};
+				//	var parametersContent = {id :'com.palm.app.messaging', params : paramsContent};
+				//	enyo.log(parametersContent); 
+				//	this.$.smsService.call(parametersContent); //--call method launch
+					//this.$.smsService.call({target: "sms:tli_test_palm@rocketmail.com"});
+//					this.$.smsService.call({"target":"im:tli_test_palm@rocketmail.com"}); //--call method open
 				break;
 		}
-	},
-	openEmailSuccess : function (inSender,inResponse){ 
-		enyo.log("insender:"+JSON.stringify(inSender));
-		enyo.log("Open success, results="+JSON.stringify(inResponse)); 
-	},
-	openEmailFailure : function (inSender,inResponse){ 
-		enyo.log("Open failure, results="+JSON.stringify(inSender)); 
 	},
 	setupRow: function(inSender, inIndex) {
 	  var row = this.dataShare[inIndex];
