@@ -84,18 +84,12 @@ enyo.kind({
 		this.ctx.fill();
 	},
 	drawFirstChart: function() {
-		/*var grad = this.ctx.createLinearGradient(this.firstFighterX - 50, this.y1, this.firstFighterX + 50, this.y1);
-		grad.addColorStop(0, 'black');
-		grad.addColorStop(1, 'white');*/
 		this.ctx.fillStyle = this.fillStyle1;
 		this.ctx.strokeStyle = this.strokeStyle1;
 		this.roundRect(this.firstFighterX - 50, this.y1, 
 				this.width, this.height1, this.cornerRadius1);
 	},
 	drawSecondChart: function() {
-		/*var grad = this.ctx.createLinearGradient(this.secondFighterX - 50, this.y2, this.secondFighterX + 50, this.y2);
-		grad.addColorStop(0, 'green');
-		grad.addColorStop(1, 'blue');*/
 		this.ctx.fillStyle = this.fillStyle2;
 		this.ctx.strokeStyle = this.strokeStyle2;
 		this.roundRect(this.secondFighterX - 50, this.y2, 
