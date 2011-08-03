@@ -213,13 +213,23 @@ enyo.kind({
 			this.$.fightWindow.$.secondFighter.setClassName("landscape-input");
 			this.$.fightWindow.setCanvasWidth(760);
 			this.$.fightWindow.setCanvasHeight(700);
+			this.$.fightWindow.$.drawingCanvas.setCanWidth(760);
+			this.$.fightWindow.$.drawingCanvas.setCanHeight(700);
 		} else {
 			this.$.fightWindow.$.firstFighter.setClassName("portrait-input");
 			this.$.fightWindow.$.secondFighter.setClassName("portrait-input");
 			this.$.fightWindow.setCanvasWidth(1020);
 			this.$.fightWindow.setCanvasHeight(500);
+			this.$.fightWindow.$.drawingCanvas.setCanWidth(1020);
+			this.$.fightWindow.$.drawingCanvas.setCanHeight(500);
 		}
-		this.$.fightWindow.$.drawingCanvas.stopAnimation();
-		this.$.fightWindow.getFighting();
+		
+		if(this.$.fightWindow.$.drawingCanvas.getName1() != "" && this.$.fightWindow.$.drawingCanvas.getName2() != "") {
+			this.$.fightWindow.$.drawingCanvas.stopAnimation();
+			if(this.$.fightWindow.getDrawingOption() == 0)
+				this.$.fightWindow.$.drawingCanvas.startBarChartAnimation();
+			else
+				this.$.fightWindow.$.drawingCanvas.startPieChartAnimation();
+		}
 	}
 });
